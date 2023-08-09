@@ -45,7 +45,9 @@ final class ViewModel: ObservableObject {
                             let tipo = anItem["tipo"] as! String
                             let empresa = Empresa(id: id, nombre: nombre, logo: logo, isin: isin, estrategia: estrategia, pais: pais, sector: sector, symbol: symbol, description: description, dividendo_desde: dividendo_desde, tipo: tipo, pub_date: pub_date)
                             DispatchQueue.main.async {
-                                self.empresas.append(empresa)
+                                if (empresa.estrategia == "Dividendos") {
+                                    self.empresas.append(empresa)
+                                }
                             }
 //                            self.empresas = empresa
 //                            self.empresas.getString()

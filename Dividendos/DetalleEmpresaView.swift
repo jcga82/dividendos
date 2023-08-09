@@ -99,7 +99,7 @@ struct DetalleEmpresaView: View {
                         .foregroundColor(.green)
                         .font(.title)
                 }
-            }.padding()
+            }.padding(.horizontal, 25)
             
             NavigationView {
                 
