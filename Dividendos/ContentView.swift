@@ -52,16 +52,7 @@ struct EmpresasView: View {
                 List {
                     ForEach(searchResults, id: \.nombre) { empresa in
                         HStack {
-                            AsyncImage(url: URL(string: "https://logo.clearbit.com/\(empresa.logo).com")) { image in
-                                image
-                                    .resizable()
-                                    .clipShape(Circle())
-                                    .aspectRatio(contentMode: .fill)
-                                                
-                            } placeholder: {
-                                Color.gray
-                            }
-                            .frame(width: 45, height: 45)
+                            LogoView(logo: empresa.logo)
                             
                             NavigationLink(destination: DetalleEmpresaView(empresa: empresa)){
                                 VStack{
@@ -86,7 +77,7 @@ struct EmpresasView: View {
 //                                print("Right Button")
 //                            }))
                             .navigationTitle("Empresas")
-                            .navigationBarTitleDisplayMode(.automatic)
+                            .navigationBarTitleDisplayMode(.inline)
                             .navigationBarHidden(false)
             }.onAppear{
                 viewModel.executeAPI()
@@ -169,5 +160,21 @@ struct StakingCard: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+struct LogoView: View {
+    var logo: String
+    var body: some View {
+        AsyncImage(url: URL(string: "https://logo.clearbit.com/\(logo).com")) { image in
+            image
+                .resizable()
+                .clipShape(Circle())
+                .aspectRatio(contentMode: .fill)
+            
+        } placeholder: {
+            Color.gray
+        }
+        .frame(width: 45, height: 45)
     }
 }

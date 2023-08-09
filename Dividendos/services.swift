@@ -41,7 +41,9 @@ final class ViewModel: ObservableObject {
                             let symbol = anItem["symbol"] as! String
                             let description = anItem["description"] as! String
                             let pub_date = anItem["pub_date"] as! String
-                            let empresa = Empresa(id: id, nombre: nombre, logo: logo, isin: isin, estrategia: estrategia, pais: pais, sector: sector, symbol: symbol, description: description, pub_date: pub_date)
+                            let dividendo_desde = anItem["dividendo_desde"] as! String
+                            let tipo = anItem["tipo"] as! String
+                            let empresa = Empresa(id: id, nombre: nombre, logo: logo, isin: isin, estrategia: estrategia, pais: pais, sector: sector, symbol: symbol, description: description, dividendo_desde: dividendo_desde, tipo: tipo, pub_date: pub_date)
                             DispatchQueue.main.async {
                                 self.empresas.append(empresa)
                             }

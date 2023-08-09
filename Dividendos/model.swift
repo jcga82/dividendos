@@ -30,6 +30,8 @@ struct Empresa: Codable {
     let sector: String
     let symbol: String
     let description: String
+    let dividendo_desde: String
+    let tipo: String
     let pub_date: String
     
     func getString() {

@@ -35,8 +35,76 @@ struct DetalleEmpresaView: View {
     
         var body: some View {
             
+            ZStack(alignment: .bottomLeading) {
+                AsyncImage(url: URL(string: "https://cdn-dynmedia-1.microsoft.com/is/image/microsoftcorp/Highlight-M365-Icon-Bounce-Word-Merch:VP2-859x540")) { image in
+                    image
+                        .resizable()
+                    
+                } placeholder: {
+                    Color.gray
+                }
+                .scaledToFill()
+                .cornerRadius(20)
+                .frame(height: 120, alignment: .top) //  <<: Here
+                .clipped()
+                .padding()
+                //                            .edgesIgnoringSafeArea(.top)
+                //LogoView(logo: empresa.logo).padding().offset(y: 25)
+                HStack {
+                    LogoView(logo: empresa.logo).padding(10).offset(y: 45)
+
+                    Text(empresa.symbol).padding().offset(y:65).font(.largeTitle).bold()
+
+                    Spacer()
+                    VStack {
+                        Image(empresa.pais)
+                                .resizable()
+                                .frame(width: 40, height: 30)
+                            .padding(40).offset(y: 50)
+                        
+                        Image(systemName: "gamecontroller.fill").offset(y: 30) //empresa.sector
+                    }
+                    
+                }
+            }
+            
+            VStack (alignment:.leading) {
+                
+                Text(empresa.nombre)
+                    .font(.largeTitle)
+                Text(empresa.isin)
+                    .font(.callout)
+                Spacer()
+                Text(empresa.description)
+                    .font(.footnote)
+                    .foregroundStyle(.gray)
+                    .multilineTextAlignment(/*@START_MENU_TOKEN@*/.leading/*@END_MENU_TOKEN@*/)
+            }.padding()
+            
+            VStack(alignment: .leading) {
+                HStack {
+                    Text("Estrategia: \(empresa.estrategia)")
+                        .font(.subheadline)
+                    Spacer()
+                    Text(empresa.dividendo_desde)
+                            .foregroundColor(.purple)
+                            .font(.headline)
+                            .bold()
+                }
+                HStack{
+                    Text("Filtros")
+                        .font(.subheadline)
+                    Spacer()
+                    Image(systemName: "hand.thumbsup.fill")
+                        .foregroundColor(.green)
+                        .font(.title)
+                }
+            }.padding()
+            
             NavigationView {
+                
                 List(results, id: \.id) { item in
+
                     HStack {
                         
                         VStack {
@@ -59,7 +127,10 @@ struct DetalleEmpresaView: View {
                         
                         
                     }
-                }
+                }.listStyle(.inset)
+//                    .offset(y: -30)
+//                .navigationTitle("Análisis")
+//                .navigationBarTitleDisplayMode(.inline)
 //
 //                CardView(card: empresa)
 //                    .cornerRadius(28)
@@ -68,6 +139,7 @@ struct DetalleEmpresaView: View {
                 }.task {
                     await loadData(symbol: empresa.symbol)
                 }
+            Spacer()
             }
             
         

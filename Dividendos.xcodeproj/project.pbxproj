@@ -80,10 +80,10 @@
 			isa = PBXGroup;
 			children = (
 				B80C48092A402D180047AAC0 /* DividendosApp.swift */,
-				7DE35DD52A83E53A0044F57D /* model.swift */,
 				B80C480B2A402D180047AAC0 /* ContentView.swift */,
-				7DE35DCF2A83E5080044F57D /* charts.swift */,
 				7DE35DD12A83E5240044F57D /* DetalleEmpresaView.swift */,
+				7DE35DD52A83E53A0044F57D /* model.swift */,
+				7DE35DCF2A83E5080044F57D /* charts.swift */,
 				7DE35DD32A83E52C0044F57D /* HeaderView.swift */,
 				7DE35DD72A83E5410044F57D /* services.swift */,
 				B80C480D2A402D1A0047AAC0 /* Assets.xcassets */,
