@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Foundation
+
 
 struct Message: Decodable, Identifiable {
     let id: Int
@@ -15,7 +17,10 @@ struct Message: Decodable, Identifiable {
 
 struct DetalleEmpresaView: View {
     @State private var results = [Result]()
+    @State var movimientos = [Movimiento]()
     var empresa: Empresa
+    @State private var showingSheet = false
+    @Environment(\.presentationMode) var presentationMode
 
     func loadData(symbol: String) async {
         guard let url = URL(string: "https://hamperblock.com/django/analisis/?symbol=" + symbol ) else {
@@ -26,17 +31,40 @@ struct DetalleEmpresaView: View {
             let (data, _) = try await URLSession.shared.data(from: url)
             if let decodedResponse = try? JSONDecoder().decode(Response.self, from: data) {
                 results = decodedResponse.results
-                print(results)
+                //print(results)
             }
         } catch {
             print("ERROR: No hay datos")
         }
     }
     
+    func loadDataMovimientos(symbol: String) async {
+        guard let url = URL(string: "https://hamperblock.com/django/movimientos/?symbol=" + symbol ) else {
+            print("Invalid URL")
+            return
+        }
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let decodedResponse = try? JSONDecoder().decode(ResponseMov.self, from: data) {
+                let all_movimientos = decodedResponse.results
+                movimientos = all_movimientos.filter { item in
+                    if (item.cartera.nombre == "Div JC") {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+                print("hay \(movimientos.count) movimientos")
+            }
+        } catch {
+            print("ERROR: No hay movimientos")
+        }
+    }
+    
         var body: some View {
             
             ZStack(alignment: .bottomLeading) {
-                AsyncImage(url: URL(string: "https://cdn-dynmedia-1.microsoft.com/is/image/microsoftcorp/Highlight-M365-Icon-Bounce-Word-Merch:VP2-859x540")) { image in
+                AsyncImage(url: URL(string: empresa.cabecera)) { image in
                     image
                         .resizable()
                     
@@ -48,8 +76,7 @@ struct DetalleEmpresaView: View {
                 .frame(height: 120, alignment: .top) //  <<: Here
                 .clipped()
                 .padding()
-                //                            .edgesIgnoringSafeArea(.top)
-                //LogoView(logo: empresa.logo).padding().offset(y: 25)
+
                 HStack {
                     LogoView(logo: empresa.logo).padding(10).offset(y: 45)
 
@@ -74,7 +101,7 @@ struct DetalleEmpresaView: View {
                     .font(.largeTitle)
                 Text(empresa.isin)
                     .font(.callout)
-                Spacer()
+                Divider()
                 Text(empresa.description)
                     .font(.footnote)
                     .foregroundStyle(.gray)
@@ -99,19 +126,25 @@ struct DetalleEmpresaView: View {
                         .foregroundColor(.green)
                         .font(.title)
                 }
+                
             }.padding(.horizontal, 25)
             
-            NavigationView {
+            Button("Movimientos") {
+                showingSheet.toggle()
+            }
+            .sheet(isPresented: $showingSheet) {
+                MovimientosView(movs: $movimientos)
+            }.task {
+                await loadDataMovimientos(symbol: empresa.symbol)
+            }
                 
+            NavigationView {
                 List(results, id: \.id) { item in
-
                     HStack {
-                        
                         VStack {
                             Text(item.fecha).font(.headline).badge(item.tags)
                             Text(item.descripcion).font(.footnote)
                         }
-                        
                         AsyncImage(url: URL(string: item.captura)) { phase in
                             if let image = phase.image {
                                 image
@@ -124,26 +157,74 @@ struct DetalleEmpresaView: View {
                             }
                         }
                         .frame(width: 50, height: 100)
-                        
-                        
                     }
-                }.listStyle(.inset)
-//                    .offset(y: -30)
-//                .navigationTitle("Análisis")
-//                .navigationBarTitleDisplayMode(.inline)
-//
-//                CardView(card: empresa)
-//                    .cornerRadius(28)
-//                    .shadow(radius: 16, y: 16)
-                    
-                }.task {
-                    await loadData(symbol: empresa.symbol)
                 }
-            Spacer()
+            }.task {
+                await loadData(symbol: empresa.symbol)
             }
-            
-        
+//            Spacer()
+            }
+}
+
+struct MovimientosView: View {
+    @Binding public var movs: [Movimiento]
+    @Environment(\.presentationMode) var presentationMode
+    @State private var tipoSecleccionado = 0
     
+    func getDate(fecha: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss+02:00"
+        return dateFormatter.date(from: fecha)
+    }
+    
+    func getCoste(acciones: Double, precio: String) -> Double? {
+        return acciones*Double(precio)!
+    }
+    var body: some View {
+        
+        VStack {
+            Button("Volver") {
+                presentationMode.wrappedValue.dismiss()
+
+            }.onAppear {
+                print(movs)
+            }
+            Text("5 Acciones")
+                .foregroundColor(.white)
+                .padding()
+                .background(.gray)
+                .clipShape(Capsule())
+            
+            Picker("What is your favorite color?", selection: $tipoSecleccionado) {
+                            Text("Compras").tag(0)
+                            Text("Ventas").tag(1)
+            }
+            .pickerStyle(.segmented).padding(.horizontal, 40)
+        }
+        
+        List(movs, id: \.id) { mov in
+            HStack {
+                VStack {
+                    Image(systemName: mov.tipo=="BUY" ? "arrow.forward" : "arrow.backward")
+                        .foregroundColor(mov.tipo=="BUY" ? .green : .red)
+                    .font(.title)
+                    
+                    Text(getDate(fecha:mov.fecha) ?? Date(), format: Date.FormatStyle().year().month().day())
+                        .font(.footnote)
+                }
+                VStack {
+                    Text("\(String(format: "%.0f", mov.acciones)) acciones")
+                    Text("\(String(format: "%.2f", Double(mov.precio)!))€")                }
+                Spacer()
+                VStack {
+                    Text("\(String(format: "%.2f", getCoste(acciones: mov.acciones, precio: mov.precio)!))€")
+                        .foregroundColor(mov.tipo=="BUY" ? .green : .red)
+                    Text(String(format: "%.0f", mov.total_acciones)).bold()
+                }
+            }
+        }
+        
+    }
 }
 
 struct AnalisisView: View {

@@ -42,6 +42,7 @@
 		7DE35DD32A83E52C0044F57D /* HeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		7DE35DD52A83E53A0044F57D /* model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = model.swift; sourceTree = "<group>"; };
 		7DE35DD72A83E5410044F57D /* services.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = services.swift; sourceTree = "<group>"; };
+		7DE35DD92A852DF60044F57D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B80C48062A402D180047AAC0 /* Dividendos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dividendos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B80C48092A402D180047AAC0 /* DividendosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividendosApp.swift; sourceTree = "<group>"; };
 		B80C480B2A402D180047AAC0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -79,6 +80,7 @@
 		B80C48082A402D180047AAC0 /* Dividendos */ = {
 			isa = PBXGroup;
 			children = (
+				7DE35DD92A852DF60044F57D /* Info.plist */,
 				B80C48092A402D180047AAC0 /* DividendosApp.swift */,
 				B80C480B2A402D180047AAC0 /* ContentView.swift */,
 				7DE35DD12A83E5240044F57D /* DetalleEmpresaView.swift */,
@@ -326,6 +328,7 @@
 				DEVELOPMENT_TEAM = FP83S5TDG6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Dividendos/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -355,6 +358,7 @@
 				DEVELOPMENT_TEAM = FP83S5TDG6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Dividendos/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

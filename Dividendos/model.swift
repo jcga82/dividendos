@@ -11,6 +11,10 @@ struct Response: Codable {
     var results: [Result]
 }
 
+struct ResponseMov: Codable {
+    var results: [Movimiento]
+}
+
 struct Result: Codable {
     var id: Int
     var captura: String
@@ -20,10 +24,31 @@ struct Result: Codable {
     let fecha: String
 }
 
+struct Cartera: Codable {
+    let id: Int
+    var nombre: String
+    var capital_inicial: String
+}
+
+struct Movimiento: Codable {
+    let id: Int
+    let tipo: String
+    let acciones: Double
+    let total_acciones: Double
+    let precio: String
+    let moneda: String
+    let empresa: Empresa
+    let cartera: Cartera
+    let comision: String
+    let cambio_moneda: String
+    let fecha: String
+}
+
 struct Empresa: Codable {
     let id: Int
     let nombre: String
     let logo: String
+    let cabecera: String
     let isin: String
     let estrategia: String
     let pais: String

@@ -33,6 +33,7 @@ final class ViewModel: ObservableObject {
                         for anItem in object as! [Dictionary<String, AnyObject>] {
                             let nombre = anItem["nombre"] as! String
                             let logo = anItem["logo"] as! String
+                            let cabecera = anItem["cabecera"] as! String
                             let id = anItem["id"] as! Int
                             let isin = anItem["isin"] as! String
                             let estrategia = anItem["estrategia"] as! String
@@ -43,7 +44,7 @@ final class ViewModel: ObservableObject {
                             let pub_date = anItem["pub_date"] as! String
                             let dividendo_desde = anItem["dividendo_desde"] as! String
                             let tipo = anItem["tipo"] as! String
-                            let empresa = Empresa(id: id, nombre: nombre, logo: logo, isin: isin, estrategia: estrategia, pais: pais, sector: sector, symbol: symbol, description: description, dividendo_desde: dividendo_desde, tipo: tipo, pub_date: pub_date)
+                            let empresa = Empresa(id: id, nombre: nombre, logo: logo, cabecera: cabecera, isin: isin, estrategia: estrategia, pais: pais, sector: sector, symbol: symbol, description: description, dividendo_desde: dividendo_desde, tipo: tipo, pub_date: pub_date)
                             DispatchQueue.main.async {
                                 if (empresa.estrategia == "Dividendos") {
                                     self.empresas.append(empresa)
