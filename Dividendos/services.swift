@@ -50,6 +50,7 @@ final class ViewModel: ObservableObject {
                                     self.empresas.append(empresa)
                                 }
                             }
+                            
 //                            self.empresas = empresa
 //                            self.empresas.getString()
                                 }

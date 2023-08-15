@@ -15,10 +15,15 @@ struct ContentView: View {
                     Image(systemName: "house.fill")
                     Text("Home")
                 }
-            ProfileView()
+            CarteraView()
                 .tabItem {
-                    Image(systemName: "person.crop.circle.fill")
-                    Text("Home")
+                    Image(systemName: "basket.fill")
+                    Text("Cartera")
+                }
+            ChartsView()
+                .tabItem {
+                    Image(systemName: "giftcard.fill")
+                    Text("Dividendos")
                 }
         }.accentColor(.green)
     }
@@ -31,6 +36,13 @@ struct EmpresasView: View {
     @State private var selectedColor = "Red"
     @State private var colors = ["Red", "Green", "Blue"]
     @State private var enableLogging = false
+    
+    func saveData(){
+        let encoder = JSONEncoder()
+        if let encodedEmpresas = try? encoder.encode(viewModel.empresas) {
+            UserDefaults.standard.set(encodedEmpresas, forKey: "empresas")
+        }
+    }
     
     var body: some View {
         VStack(spacing: 0){
@@ -64,7 +76,7 @@ struct EmpresasView: View {
                                                 .frame(width: 20, height: 15)
                                     }
                                     
-                                    Text(empresa.nombre).font(.callout).badge(empresa.estrategia)
+                                    Text(empresa.nombre).font(.callout).badge(empresa.tipo)
                                 }
                             }
                         }
@@ -81,6 +93,7 @@ struct EmpresasView: View {
                             .navigationBarHidden(false)
             }.onAppear{
                 viewModel.executeAPI()
+                //saveData()
             }
         }
 //        .tabItem {

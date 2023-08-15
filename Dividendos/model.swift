@@ -15,6 +15,14 @@ struct ResponseMov: Codable {
     var results: [Movimiento]
 }
 
+struct ResponsePos: Codable {
+    var results: [Posicion]
+}
+
+struct ResponseDiv: Codable {
+    var results: [Dividendo]
+}
+
 struct Result: Codable {
     var id: Int
     var captura: String
@@ -25,9 +33,17 @@ struct Result: Codable {
 }
 
 struct Cartera: Codable {
-    let id: Int
+    var id: Int
     var nombre: String
     var capital_inicial: String
+}
+
+struct Posicion: Codable, Identifiable {
+    var id: Int
+    var cartera: Cartera
+    var symbol: String
+    var cantidad: Int
+    var pmc: Double
 }
 
 struct Movimiento: Codable {
@@ -61,6 +77,28 @@ struct Empresa: Codable {
     
     func getString() {
         print( "Name: \(nombre), Id: \(id), logo: \(logo), est: \(estrategia), pub_date: \(pub_date) ")
+    }
+}
+
+struct Dividendo: Codable, Identifiable {
+    let id: Int
+    let date: String
+    let dividendo: Double
+    let ex_dividend: String
+    let payable_date: String
+    let frequency: Double
+    let tipo: String
+    let empresa: Empresa
+    
+    init(id: Int, date: String, dividendo: Double, ex_dividend: String, payable_date: String, frequency: Double, tipo: String, empresa: Empresa) {
+        self.id = id
+        self.date = date
+        self.dividendo = dividendo
+        self.ex_dividend = ex_dividend
+        self.payable_date = payable_date
+        self.frequency = frequency
+        self.tipo = tipo
+        self.empresa = empresa
     }
 }
 

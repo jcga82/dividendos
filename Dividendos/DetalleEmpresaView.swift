@@ -168,18 +168,11 @@ struct DetalleEmpresaView: View {
 
 struct MovimientosView: View {
     @Binding public var movs: [Movimiento]
+    var isName: Bool = false
     @Environment(\.presentationMode) var presentationMode
     @State private var tipoSecleccionado = 0
     
-    func getDate(fecha: String) -> Date? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss+02:00"
-        return dateFormatter.date(from: fecha)
-    }
     
-    func getCoste(acciones: Double, precio: String) -> Double? {
-        return acciones*Double(precio)!
-    }
     var body: some View {
         
         VStack {
@@ -189,11 +182,11 @@ struct MovimientosView: View {
             }.onAppear {
                 print(movs)
             }
-            Text("5 Acciones")
-                .foregroundColor(.white)
-                .padding()
-                .background(.gray)
-                .clipShape(Capsule())
+//            Text("5 Acciones")
+//                .foregroundColor(.white)
+//                .padding()
+//                .background(.gray)
+//                .clipShape(Capsule())
             
             Picker("What is your favorite color?", selection: $tipoSecleccionado) {
                             Text("Compras").tag(0)
@@ -213,8 +206,12 @@ struct MovimientosView: View {
                         .font(.footnote)
                 }
                 VStack {
-                    Text("\(String(format: "%.0f", mov.acciones)) acciones")
-                    Text("\(String(format: "%.2f", Double(mov.precio)!))€")                }
+                    HStack {
+                        Text("\(String(format: "%.0f", mov.acciones)) acc")
+                        Text(isName ? "@\(mov.empresa.symbol)" : "")
+                    }
+                    Text("\(String(format: "%.2f", Double(mov.precio)!))€").font(.footnote)
+                    }
                 Spacer()
                 VStack {
                     Text("\(String(format: "%.2f", getCoste(acciones: mov.acciones, precio: mov.precio)!))€")
