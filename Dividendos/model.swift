@@ -19,6 +19,10 @@ struct ResponsePos: Codable {
     var results: [Posicion]
 }
 
+struct ResponseCar: Codable {
+    var results: [Cartera]
+}
+
 struct ResponseDiv: Codable {
     var results: [Dividendo]
 }
@@ -32,8 +36,7 @@ struct Result: Codable {
     let fecha: String
 }
 
-struct Cartera: Codable {
-    var id: Int
+struct Cartera: Codable, Hashable {
     var nombre: String
     var capital_inicial: String
 }

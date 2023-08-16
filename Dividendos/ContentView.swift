@@ -25,6 +25,11 @@ struct ContentView: View {
                     Image(systemName: "giftcard.fill")
                     Text("Dividendos")
                 }
+            ProfileView()
+                .tabItem {
+                    Image(systemName: "pencil.circle.fill")
+                    Text("Opciones")
+                }
         }.accentColor(.green)
     }
 }
@@ -113,38 +118,68 @@ struct EmpresasView: View {
 
 
 struct ProfileView: View {
+    
+    @State private var carteras = [Cartera]()
+    @State private var selectedCartera:Cartera?
+    
+    func loadCarteras() async {
+        guard let url = URL(string: "https://hamperblock.com/django/carteras" ) else {
+            print("Invalid URL")
+            return
+        }
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let decodedResponse = try? JSONDecoder().decode(ResponseCar.self, from: data) {
+                carteras = decodedResponse.results
+            }
+        } catch {
+            print("ERROR: No hay carteras")
+        }
+    }
+    
     var body: some View {
             NavigationView {
                 List {
                     Section() {
                         VStack() {
-                            Image("test")
+                            Image("logo")
                                 .resizable()
                                 .frame(width: 50, height: 50)
-                            Text("Test word")
-                                .foregroundColor(Color.red)
+                            Text("HBLOCK50")
+                            Text("v0.1 beta").font(.footnote)
+                            Form {
+                                        Picker("Cartera:", selection: $selectedCartera) {
+                                            ForEach(carteras, id: \.nombre) {
+                                                Text($0.nombre)//.tag($0 as Cartera?)
+                                            }
+                                        }
+                    //                    .onChange(of: selectedDog) {dog in
+                    //                        print("Dog Color: \(dog?.breed)")
+                    //                    }
+                                    }
+                            NavigationLink(destination: Text("Pendiente...")) {
+                                Label("Avanzado", systemImage: "slider.horizontal.3")
+                            }
                         }
                         .frame(minWidth: 0, maxWidth: .infinity)
-                        .frame(height: 150)
-                    }
-                    ForEach((0..<4), id: \.self) { index in
-                        Section {
-                            NavigationLink(destination: Text("aaa")) {
-                                Label("Buttons", systemImage: "capsule")
-                            }
-                            NavigationLink(destination: Text("aaa")) {
-                                Label("Colors", systemImage: "paintpalette")
-                            }
-                            NavigationLink(destination: Text("aaa")) {
-                                Label("Controls", systemImage: "slider.horizontal.3")
+                        .frame(height: 250)
+                        Section() {
+                            NavigationLink(destination: Text("Pendiente...")) {
+                                Label("Modo oscuro", systemImage: "paintpalette")
                             }
                         }
                     }
+//                            NavigationLink(destination: Text("aaa")) {
+//                                Label("Colors", systemImage: "paintpalette")
+//                            }
                 }
-                .navigationBarTitle("SwiftUI")
+                .navigationBarTitle("Opciones")
                 .navigationBarTitleDisplayMode(.inline)
             }
             .accentColor(.accentColor)
+            .task {
+                await loadCarteras()
+            }
         }
     }
 
