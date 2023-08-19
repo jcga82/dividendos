@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Foundation
+import SwiftUIImageViewer
 
 
 struct Message: Decodable, Identifiable {
@@ -21,6 +22,7 @@ struct DetalleEmpresaView: View {
     var empresa: Empresa
     @State private var showingSheet = false
     @Environment(\.presentationMode) var presentationMode
+    @State private var isImagePresented = false
 
     func loadData(symbol: String) async {
         guard let url = URL(string: "https://hamperblock.com/django/analisis/?symbol=" + symbol ) else {
@@ -60,6 +62,19 @@ struct DetalleEmpresaView: View {
             print("ERROR: No hay movimientos")
         }
     }
+    
+    private var closeButton: some View {
+            Button {
+                isImagePresented = false
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.headline)
+            }
+            .buttonStyle(.bordered)
+            .clipShape(Circle())
+            .tint(.purple)
+            .padding()
+        }
     
         var body: some View {
             
@@ -150,6 +165,15 @@ struct DetalleEmpresaView: View {
                                 image
                                     .resizable()
                                     .scaledToFit()
+                                    .onTapGesture {
+                                        isImagePresented = true
+                                    }
+                                    .fullScreenCover(isPresented: $isImagePresented) {
+                                        SwiftUIImageViewer(image: image)
+                                            .overlay(alignment: .topTrailing) {
+                                                closeButton
+                                            }
+                                    }
                             } else if phase.error != nil {
                                 Text("There was an error loading the image.")
                             } else {
