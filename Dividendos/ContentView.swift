@@ -131,6 +131,7 @@ struct ProfileView: View {
             let (data, _) = try await URLSession.shared.data(from: url)
             if let decodedResponse = try? JSONDecoder().decode(ResponseCar.self, from: data) {
                 carteras = decodedResponse.results
+                print(carteras)
             }
         } catch {
             print("ERROR: No hay carteras")
@@ -149,13 +150,14 @@ struct ProfileView: View {
                             Text("v0.1 beta").font(.footnote)
                             Form {
                                         Picker("Cartera:", selection: $selectedCartera) {
-                                            ForEach(carteras, id: \.nombre) {
-                                                Text($0.nombre)//.tag($0 as Cartera?)
+                                            ForEach(carteras, id: \.self) {
+                                                Text($0.nombre).tag($0 as Cartera?)
                                             }
                                         }
-                    //                    .onChange(of: selectedDog) {dog in
-                    //                        print("Dog Color: \(dog?.breed)")
-                    //                    }
+                                        .onChange(of: selectedCartera, perform: {cartera in
+                                            print("ID Cartera select: \(cartera?.id ?? 0)")
+                                            UserDefaults.standard.set(cartera?.id, forKey: "cartera")
+                                        })
                                     }
                             NavigationLink(destination: Text("Pendiente...")) {
                                 Label("Avanzado", systemImage: "slider.horizontal.3")

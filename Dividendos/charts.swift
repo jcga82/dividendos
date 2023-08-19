@@ -33,7 +33,7 @@ struct ChartsView: View {
         return Double(amount!.cantidad)
     }
     
-    func loadDataCartera() async {
+    func loadDataCartera(id: Int) async {
         guard let url = URL(string: "https://hamperblock.com/django/posiciones" ) else {
             print("Invalid URL")
             return
@@ -43,7 +43,7 @@ struct ChartsView: View {
             if let decodedResponse = try? JSONDecoder().decode(ResponsePos.self, from: data) {
                 let all_posiciones = decodedResponse.results
                 posiciones = all_posiciones.filter { item in
-                    if (item.cartera.nombre == "Div JC") {
+                    if (item.cartera.id == id) {
                         return true
                     } else {
                         return false
@@ -188,7 +188,7 @@ struct ChartsView: View {
                     }
                 }
                 .task {
-                    await loadDataCartera()
+                    await loadDataCartera(id: UserDefaults.standard.integer(forKey: "cartera") ?? 9)
                 }
                 .navigationTitle("Siguientes pagos")
             }

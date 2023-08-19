@@ -37,6 +37,7 @@ struct Result: Codable {
 }
 
 struct Cartera: Codable, Hashable {
+    var id: Int
     var nombre: String
     var capital_inicial: String
 }

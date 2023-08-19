@@ -14,7 +14,7 @@ struct CarteraView: View {
     @State var movimientos = [Movimiento]()
     @State private var showingSheet = false
     
-    func loadDataCartera() async {
+    func loadDataCartera(id: Int) async {
         guard let url = URL(string: "https://hamperblock.com/django/posiciones" ) else {
             print("Invalid URL")
             return
@@ -24,7 +24,7 @@ struct CarteraView: View {
             if let decodedResponse = try? JSONDecoder().decode(ResponsePos.self, from: data) {
                 let all_posiciones = decodedResponse.results
                 posiciones = all_posiciones.filter { item in
-                    if (item.cartera.nombre == "Div JC") {
+                    if (item.cartera.id == id) {
                         return true
                     } else {
                         return false
@@ -138,7 +138,7 @@ struct CarteraView: View {
                 }
             }
             .task {
-                await loadDataCartera()
+                await loadDataCartera(id: UserDefaults.standard.integer(forKey: "cartera") ?? 9)
             }
             
         }
