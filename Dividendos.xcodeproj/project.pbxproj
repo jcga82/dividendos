@@ -25,6 +25,7 @@
 		7DE35DDD2A868D970044F57D /* auxiliares.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE35DDC2A868D970044F57D /* auxiliares.swift */; };
 		7DE35DDF2A8B653E0044F57D /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE35DDE2A8B653E0044F57D /* PieChartView.swift */; };
 		7DE35DE22A90BFE30044F57D /* SwiftUIImageViewer in Frameworks */ = {isa = PBXBuildFile; productRef = 7DE35DE12A90BFE30044F57D /* SwiftUIImageViewer */; };
+		7DE35DE42A92708F0044F57D /* ProfitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE35DE32A92708F0044F57D /* ProfitView.swift */; };
 		B80C480A2A402D180047AAC0 /* DividendosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80C48092A402D180047AAC0 /* DividendosApp.swift */; };
 		B80C480C2A402D180047AAC0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80C480B2A402D180047AAC0 /* ContentView.swift */; };
 		B80C480E2A402D1A0047AAC0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B80C480D2A402D1A0047AAC0 /* Assets.xcassets */; };
@@ -50,6 +51,7 @@
 		7DE35DDA2A868C5E0044F57D /* CarteraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarteraView.swift; sourceTree = "<group>"; };
 		7DE35DDC2A868D970044F57D /* auxiliares.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = auxiliares.swift; sourceTree = "<group>"; };
 		7DE35DDE2A8B653E0044F57D /* PieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
+		7DE35DE32A92708F0044F57D /* ProfitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitView.swift; sourceTree = "<group>"; };
 		B80C48062A402D180047AAC0 /* Dividendos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dividendos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B80C48092A402D180047AAC0 /* DividendosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividendosApp.swift; sourceTree = "<group>"; };
 		B80C480B2A402D180047AAC0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -89,18 +91,19 @@
 			isa = PBXGroup;
 			children = (
 				7DE35DD92A852DF60044F57D /* Info.plist */,
-				B80C48092A402D180047AAC0 /* DividendosApp.swift */,
 				B80C480B2A402D180047AAC0 /* ContentView.swift */,
 				7DE35DD12A83E5240044F57D /* DetalleEmpresaView.swift */,
 				7DE35DD52A83E53A0044F57D /* model.swift */,
+				7DE35DE32A92708F0044F57D /* ProfitView.swift */,
 				7DE35DCF2A83E5080044F57D /* charts.swift */,
+				7DE35DDA2A868C5E0044F57D /* CarteraView.swift */,
+				B80C48092A402D180047AAC0 /* DividendosApp.swift */,
 				7DE35DDE2A8B653E0044F57D /* PieChartView.swift */,
 				7DE35DD32A83E52C0044F57D /* HeaderView.swift */,
 				7DE35DD72A83E5410044F57D /* services.swift */,
 				7DE35DDC2A868D970044F57D /* auxiliares.swift */,
 				B80C480D2A402D1A0047AAC0 /* Assets.xcassets */,
 				B80C480F2A402D1A0047AAC0 /* Preview Content */,
-				7DE35DDA2A868C5E0044F57D /* CarteraView.swift */,
 			);
 			path = Dividendos;
 			sourceTree = "<group>";
@@ -202,6 +205,7 @@
 			files = (
 				7DE35DCD2A83E4E60044F57D /* DividendosApp.swift in Sources */,
 				7DE35DCA2A83E4E60044F57D /* DetalleEmpresaView.swift in Sources */,
+				7DE35DE42A92708F0044F57D /* ProfitView.swift in Sources */,
 				7DE35DDD2A868D970044F57D /* auxiliares.swift in Sources */,
 				7DE35DC92A83E4E60044F57D /* model.swift in Sources */,
 				7DE35DCB2A83E4E60044F57D /* ContentView.swift in Sources */,
@@ -343,7 +347,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"Dividendos/Preview Content\"";
 				DEVELOPMENT_TEAM = FP83S5TDG6;
 				ENABLE_PREVIEWS = YES;
@@ -360,7 +364,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.letteringenieros.Dividendos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -375,7 +379,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"Dividendos/Preview Content\"";
 				DEVELOPMENT_TEAM = FP83S5TDG6;
 				ENABLE_PREVIEWS = YES;
@@ -392,7 +396,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.letteringenieros.Dividendos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

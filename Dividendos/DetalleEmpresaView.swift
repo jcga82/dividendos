@@ -40,7 +40,7 @@ struct DetalleEmpresaView: View {
         }
     }
     
-    func loadDataMovimientos(symbol: String) async {
+    func loadDataMovimientos(symbol: String, id: Int) async {
         guard let url = URL(string: "https://hamperblock.com/django/movimientos/?symbol=" + symbol ) else {
             print("Invalid URL")
             return
@@ -150,7 +150,7 @@ struct DetalleEmpresaView: View {
             .sheet(isPresented: $showingSheet) {
                 MovimientosView(movs: $movimientos)
             }.task {
-                await loadDataMovimientos(symbol: empresa.symbol)
+                await loadDataMovimientos(symbol: empresa.symbol, id: UserDefaults.standard.integer(forKey: "cartera"))
             }
                 
             NavigationView {

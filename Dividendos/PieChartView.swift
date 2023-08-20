@@ -27,7 +27,7 @@ struct PieChartView: View {
             SectorMark(
                 angle: .value("Ventas", Double(data.cantidad))
             )
-            .foregroundStyle(by: .value("Empresa", data.symbol))
+            .foregroundStyle(by: .value("Empresa", data.empresa.symbol))
         }.padding()
         
 //        Chart (coffeeSales, id: \.name) { data in

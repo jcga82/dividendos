@@ -29,7 +29,8 @@ struct ChartsView: View {
     @State var activos: [String] = []
     
     func findAccionesEmpresa(symbol: String) -> Double {
-        let amount = posiciones.first{$0.symbol == symbol}
+        let amount = posiciones.first{$0.empresa.symbol == symbol}
+        print("eee", amount as Any)
         return Double(amount!.cantidad)
     }
     
@@ -49,8 +50,8 @@ struct ChartsView: View {
                         return false
                     }
                 }
-                activos = posiciones.map { $0.symbol }
-                print("hay \(activos.count) activos")
+                activos = posiciones.map { $0.empresa.symbol }
+                print("hay \(posiciones.count) posiciones")
             }
         } catch {
             print("ERROR: No hay posiciones")
@@ -188,7 +189,7 @@ struct ChartsView: View {
                     }
                 }
                 .task {
-                    await loadDataCartera(id: UserDefaults.standard.integer(forKey: "cartera") ?? 9)
+                    await loadDataCartera(id: UserDefaults.standard.integer(forKey: "cartera") )
                 }
                 .navigationTitle("Siguientes pagos")
             }

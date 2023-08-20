@@ -40,12 +40,18 @@ struct Cartera: Codable, Hashable {
     var id: Int
     var nombre: String
     var capital_inicial: String
+    
+    init(id: Int, nombre: String, capital_inicial: String) {
+        self.id = id
+        self.nombre = nombre
+        self.capital_inicial = capital_inicial
+    }
 }
 
 struct Posicion: Codable, Identifiable {
     var id: Int
     var cartera: Cartera
-    var symbol: String
+    var empresa: Empresa
     var cantidad: Int
     var pmc: Double
 }
@@ -82,6 +88,18 @@ struct Empresa: Codable {
     func getString() {
         print( "Name: \(nombre), Id: \(id), logo: \(logo), est: \(estrategia), pub_date: \(pub_date) ")
     }
+}
+
+struct Profit: Codable, Identifiable {
+    let id: Int
+    let cartera: Cartera
+    let fecha: String
+    let valor: Double
+    let profit: Double
+    let balance: Double
+    let dividendos: Double
+    let aportado_total: Double
+    
 }
 
 struct Dividendo: Codable, Identifiable {

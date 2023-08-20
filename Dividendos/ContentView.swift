@@ -20,6 +20,11 @@ struct ContentView: View {
                     Image(systemName: "basket.fill")
                     Text("Cartera")
                 }
+            ProfitView()
+                .tabItem {
+                    Image(systemName: "chart.xyaxis.line")
+                    Text("Balance")
+                }
             ChartsView()
                 .tabItem {
                     Image(systemName: "giftcard.fill")
@@ -51,19 +56,6 @@ struct EmpresasView: View {
     
     var body: some View {
         VStack(spacing: 0){
-            
-//            Form {
-////                Section(footer: Text("Note: Enabling logging may slow down the app")) {
-//                    Picker("Select a color", selection: $selectedColor) {
-//                        ForEach(colors, id: \.self) {
-//                            Text($0)
-//                        }
-//                    }
-//                    .pickerStyle(.segmented)
-//
-//                    Toggle("Enable Logging", isOn: $enableLogging)
-////                }
-//            }.frame(height: 130)
             
             NavigationView {
                 List {
@@ -123,6 +115,9 @@ struct ProfileView: View {
     @State private var selectedCartera:Cartera?
     
     func loadCarteras() async {
+        
+        UserDefaults.standard.set(9, forKey: "cartera")
+        
         guard let url = URL(string: "https://hamperblock.com/django/carteras" ) else {
             print("Invalid URL")
             return
@@ -149,15 +144,15 @@ struct ProfileView: View {
                             Text("HBLOCK50")
                             Text("v0.1 beta").font(.footnote)
                             Form {
-                                        Picker("Cartera:", selection: $selectedCartera) {
+                                Picker("Cartera:", selection: $selectedCartera) {
                                             ForEach(carteras, id: \.self) {
                                                 Text($0.nombre).tag($0 as Cartera?)
                                             }
                                         }
-                                        .onChange(of: selectedCartera, perform: {cartera in
-                                            print("ID Cartera select: \(cartera?.id ?? 0)")
-                                            UserDefaults.standard.set(cartera?.id, forKey: "cartera")
-                                        })
+                                        .onChange(of: selectedCartera) {
+                                            print("ID Cartera select: \(selectedCartera?.id ?? 0)")
+                                            UserDefaults.standard.set(selectedCartera?.id, forKey: "cartera")
+                                        }
                                     }
                             NavigationLink(destination: Text("Pendiente...")) {
                                 Label("Avanzado", systemImage: "slider.horizontal.3")

@@ -8,6 +8,11 @@
 import SwiftUI
 import Charts
 
+struct Desglose {
+    var name: String
+    var count: Double
+}
+
 struct CarteraView: View {
     
     @State var posiciones = [Posicion]()
@@ -30,10 +35,6 @@ struct CarteraView: View {
                         return false
                     }
                 }
-                posiciones.forEach { item in
-                    print(item)
-                    getEmpresa(symbol: item.symbol)
-                }
                 print("hay \(posiciones.count) posiciones")
             }
         } catch {
@@ -41,7 +42,7 @@ struct CarteraView: View {
         }
     }
     
-    func loadDataMovimientos() async {
+    func loadDataMovimientos(id: Int) async {
         guard let url = URL(string: "https://hamperblock.com/django/movimientos" ) else {
             print("Invalid URL")
             return
@@ -51,7 +52,7 @@ struct CarteraView: View {
             if let decodedResponse = try? JSONDecoder().decode(ResponseMov.self, from: data) {
                 let all_movimientos = decodedResponse.results
                 movimientos = all_movimientos.filter { item in
-                    if (item.cartera.nombre == "Div JC") {
+                    if (item.cartera.id == id) {
                         return true
                     } else {
                         return false
@@ -64,81 +65,78 @@ struct CarteraView: View {
         }
     }
     
-    func getEmpresa(symbol: String) -> Void  {
-        let empresas = UserDefaults.standard.array(forKey: "empresas")
-        if let savedUserData = UserDefaults.standard.object(forKey: "empresas") as? Data {
-            let decoder = JSONDecoder()
-            if let savedUser = try? decoder.decode([Empresa].self, from: savedUserData) {
-                print("Saved user: \(savedUser)")
-            }
-        }
-        //print("ya", empresas.forEach {$0})
+    func getCosteTotal() -> Double {
+        return posiciones.reduce(0, { result, info in
+            return result + (Double(info.cantidad)*info.pmc)
+        })
     }
-    private var paises = [
-        (name: "EEUU", count: 70),
-        (name: "UK", count: 15),
-        (name: "España", count: 4),
-        (name: "Canadá", count: 2)
-    ]
     
     
     var body: some View {
         
         VStack {
-            Button("Movimientos") {
-                showingSheet.toggle()
-            }
-            .sheet(isPresented: $showingSheet) {
-                MovimientosView(movs: $movimientos, isName: true)
-            }.task {
-                await loadDataMovimientos()
-            }
+            Text("Cartera").font(.title)
             
-            Chart (paises, id: \.name) { data in
+            Text("Total Invertido \(String(format: "%.0f", getCosteTotal()))")
+            
+            Button("Mis Movimientos") {
+                showingSheet.toggle()
+            }.sheet(isPresented: $showingSheet) {
+                MovimientosView(movs: $movimientos, isName: true)
+                }.task {
+                    await loadDataMovimientos(id: UserDefaults.standard.integer(forKey: "cartera"))
+                }
+            
+            Divider()
+            
+            Text("Desglose por países ($)").font(.subheadline)
+            
+            Chart (getDesglosePorPaises(posiciones: posiciones), id: \.name) { data in
                 BarMark(
                     x: .value("Cup", data.count)
                 )
-                .foregroundStyle(by: .value("Type", data.name))
+                .foregroundStyle(by: .value("Tipo", "\(data.name): \(String(format: "%.0f",data.count))"))
             }.frame(height: 60).padding()
             
-            Text("% por países").font(.subheadline)
+            Text("Desglose por sector (%)").font(.subheadline)
             
-            Chart(posiciones) { data in
+            Chart(getDesglosePorSectores(posiciones: posiciones), id: \.name) { data in
                 SectorMark(
-                    angle: .value("Ventas", Double(data.cantidad)*data.pmc),
+                    angle: .value("Ventas", data.count),
                     innerRadius: .ratio(0.55),
                     angularInset: 2.0
                 )
-                .foregroundStyle(by: .value("Empresa", data.symbol))
+                .foregroundStyle(by: .value("Empresa", data.name))
                 .annotation(position: .overlay) {
-                    Text("\(String(format: "%.0f", Double(data.cantidad)*data.pmc))")
+                    Text("\(String(format: "%.0f", data.count*100/getCosteTotal()))%")
                         .font(.footnote)
                         .foregroundStyle(.white)
                 }
             }
             .padding()
             .chartBackground { proxy in
-                Text("💹").font(.system(size: 50))
+                Text("💼").font(.system(size: 45))
             }
-            Text("% Invertido").font(.subheadline)
+            
+            // Text("Posiciones").font(.title)
             
             List(posiciones, id: \.id) { pos in
                 HStack {
+                    LogoView(logo: pos.empresa.logo)
                     VStack {
-                        Text(pos.symbol)
-                        Text("\(String(format: "%.2f", pos.pmc))$").font(.caption)
+                        Text("\(String(pos.cantidad)) acc").bold()
+                        Text("PMC: \(String(format: "%.2f", pos.pmc))$").font(.caption)
                     }
                     Spacer()
-                    
                     VStack {
-                        Text("\(String(pos.cantidad))").bold()
-                        Text("\(String(format: "%.2f", getCoste(acciones: Double(pos.cantidad), precio: String(pos.pmc))!))€").font(.caption)
+                        Text("\(String(format: "%.2f", getCoste(acciones: Double(pos.cantidad), precio: String(pos.pmc))!))€")
                             //.foregroundColor(pos.tipo=="BUY" ? .green : .red)
+                        Text("\(String(format: "%.2f", Double(pos.cantidad)*pos.pmc*100/getCosteTotal()))%").font(.caption)
                     }
                 }
             }
             .task {
-                await loadDataCartera(id: UserDefaults.standard.integer(forKey: "cartera") ?? 9)
+                await loadDataCartera(id: UserDefaults.standard.integer(forKey: "cartera"))
             }
             
         }

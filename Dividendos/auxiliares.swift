@@ -22,3 +22,76 @@ func getDateShort(fecha: String) -> Date? {
 func getCoste(acciones: Double, precio: String) -> Double? {
     return acciones*Double(precio)!
 }
+
+func getDesglosePorPaises(posiciones: [Posicion]) -> [Desglose] {
+    let eeuu = posiciones.reduce(0, { result, info in
+        if (info.empresa.pais == "eeuu") {
+            return result + (Double(info.cantidad)*info.pmc)
+        } else { return result }
+    })
+    let uk = posiciones.reduce(0, { result, info in
+        if (info.empresa.pais == "uk") {
+            return result + (Double(info.cantidad)*info.pmc)
+        } else { return result }
+    })
+    let spain = posiciones.reduce(0, { result, info in
+        if (info.empresa.pais == "spain") {
+            return result + (Double(info.cantidad)*info.pmc)
+        } else { return result }
+    })
+    let otros = posiciones.reduce(0, { result, info in
+        if (info.empresa.pais == "otros") {
+            return result + (Double(info.cantidad)*info.pmc)
+        } else { return result }
+    })
+    return [ Desglose(name: "EEUU", count: eeuu), Desglose(name: "UK", count: uk),
+             Desglose(name: "ES", count: spain), Desglose(name: "Otros", count: otros)]
+}
+
+func getDesglosePorSectores(posiciones: [Posicion]) -> [Desglose] {
+    let defensivo = posiciones.reduce(0, { result, info in
+        if (info.empresa.sector == "ConsumoDef") {
+            return result + (Double(info.cantidad)*info.pmc)
+        } else { return result }
+    })
+    let industrial = posiciones.reduce(0, { result, info in
+        if (info.empresa.sector == "industrial") {
+            return result + (Double(info.cantidad)*info.pmc)
+        } else { return result }
+    })
+    let tecnologia = posiciones.reduce(0, { result, info in
+        if (info.empresa.sector == "tecno") {
+            return result + (Double(info.cantidad)*info.pmc)
+        } else { return result }
+    })
+    let salud = posiciones.reduce(0, { result, info in
+        if (info.empresa.sector == "salud") {
+            return result + (Double(info.cantidad)*info.pmc)
+        } else { return result }
+    })
+    let consumoCic = posiciones.reduce(0, { result, info in
+        if (info.empresa.sector == "consumoCic") {
+            return result + (Double(info.cantidad)*info.pmc)
+        } else { return result }
+    })
+    return [ Desglose(name: "Defensivo", count: defensivo), Desglose(name: "Industrial", count: industrial),
+    Desglose(name: "Tecnología", count: tecnologia), Desglose(name: "Salud", count: salud), Desglose(name: "Cíclico", count: consumoCic)]
+}
+
+func getEmpresa(symbol: String) async -> Empresa {
+    var empresa = Empresa(id: 1, nombre: "", logo: "", cabecera: "", isin: "", estrategia: "", pais: "", sector: "", symbol: "", description: "", dividendo_desde: "", tipo: "", pub_date: "")
+    
+    guard let url = URL(string: "https://hamperblock.com/django/empresas/?symbol=" + symbol ) else {
+        print("Invalid URL")
+        return empresa
+    }
+    do {
+        let (data, _) = try await URLSession.shared.data(from: url)
+        if let decodedResponse = try? JSONDecoder().decode([Empresa].self, from: data) {
+            empresa = decodedResponse[0]
+        }
+    } catch {
+        print("ERROR: No hay datos")
+    }
+    return empresa
+}
