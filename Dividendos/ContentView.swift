@@ -66,14 +66,43 @@ struct EmpresasView: View {
                             NavigationLink(destination: DetalleEmpresaView(empresa: empresa)){
                                 VStack{
                                     HStack{
-                                        Text(empresa.symbol)
+                                        VStack(alignment: .leading) {
+                                            Text(empresa.symbol).bold()
+                                            Text(empresa.nombre).font(.callout)
+                                        }
                                         Spacer()
-                                        Image(empresa.pais)
-                                                .resizable()
-                                                .frame(width: 20, height: 15)
+                                        VStack {
+                                            Image(empresa.pais)
+                                                    .resizable()
+                                                .frame(width: 25, height: 20)
+                                            ZStack {
+                                                Image(empresa.tipo == "aristocrata" ? "aristocrata" : empresa.tipo == "vaca" ? "vaca" : "flecha")
+                                                    .resizable()
+                                                    .frame(width: 25, height: 25)
+                                                Text(String(getYearsDividend(year: Int(empresa.dividendo_desde)!)))
+                                                    .font(.footnote)
+                                                    .bold()
+                                                    .foregroundColor(.white)
+                                                    .background(
+                                                        Circle().foregroundColor(.green).frame(width: 20, height: 25)
+                                                    )
+                                                    .offset(x: 10, y: -10)
+                                            }
+                                                
+//                                                .overlay(HStack(alignment: .top) {
+//                                                    Image(systemName: "1")
+//                                                        .foregroundColor(.green).frame(maxWidth: .infinity)
+//                                                }
+//                                                    .frame(maxHeight: .infinity)
+//                                                        .symbolVariant(.fill)
+//                                                        .symbolVariant(.circle)
+//                                                        .allowsHitTesting(false)
+//                                                        .offset(x: 10, y: -10)
+//                                                )
+                                        }
                                     }
                                     
-                                    Text(empresa.nombre).font(.callout).badge(empresa.tipo)
+                                    //.badge(empresa.tipo)
                                 }
                             }
                         }

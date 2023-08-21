@@ -23,6 +23,11 @@ func getCoste(acciones: Double, precio: String) -> Double? {
     return acciones*Double(precio)!
 }
 
+func getYearsDividend(year: Int) -> Int {
+    let currentYear = Calendar.current.component(.year, from: Date())
+    return currentYear - year
+}
+
 func getDesglosePorPaises(posiciones: [Posicion]) -> [Desglose] {
     let eeuu = posiciones.reduce(0, { result, info in
         if (info.empresa.pais == "eeuu") {
