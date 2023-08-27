@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7DA58E5A2A9B4BF4009BD943 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA58E592A9B4BF4009BD943 /* ProfileView.swift */; };
+		7DA58E5C2A9BA1D1009BD943 /* ProfitViviendasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA58E5B2A9BA1D1009BD943 /* ProfitViviendasView.swift */; };
+		7DA58E5E2A9BB52E009BD943 /* ContratosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA58E5D2A9BB52E009BD943 /* ContratosView.swift */; };
 		7DE35DC62A83E4E60044F57D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7DE35DBD2A83E4E60044F57D /* Assets.xcassets */; };
 		7DE35DC72A83E4E60044F57D /* services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE35DBE2A83E4E60044F57D /* services.swift */; };
 		7DE35DC82A83E4E60044F57D /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE35DBF2A83E4E60044F57D /* HeaderView.swift */; };
@@ -26,6 +29,7 @@
 		7DE35DDF2A8B653E0044F57D /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE35DDE2A8B653E0044F57D /* PieChartView.swift */; };
 		7DE35DE22A90BFE30044F57D /* SwiftUIImageViewer in Frameworks */ = {isa = PBXBuildFile; productRef = 7DE35DE12A90BFE30044F57D /* SwiftUIImageViewer */; };
 		7DE35DE42A92708F0044F57D /* ProfitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE35DE32A92708F0044F57D /* ProfitView.swift */; };
+		7DE35DE62A9907000044F57D /* ViviendasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE35DE52A9907000044F57D /* ViviendasView.swift */; };
 		B80C480A2A402D180047AAC0 /* DividendosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80C48092A402D180047AAC0 /* DividendosApp.swift */; };
 		B80C480C2A402D180047AAC0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80C480B2A402D180047AAC0 /* ContentView.swift */; };
 		B80C480E2A402D1A0047AAC0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B80C480D2A402D1A0047AAC0 /* Assets.xcassets */; };
@@ -33,6 +37,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7DA58E592A9B4BF4009BD943 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		7DA58E5B2A9BA1D1009BD943 /* ProfitViviendasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfitViviendasView.swift; sourceTree = "<group>"; };
+		7DA58E5D2A9BB52E009BD943 /* ContratosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContratosView.swift; sourceTree = "<group>"; };
 		7DE35DBD2A83E4E60044F57D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Dividendos/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		7DE35DBE2A83E4E60044F57D /* services.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = services.swift; path = Dividendos/services.swift; sourceTree = SOURCE_ROOT; };
 		7DE35DBF2A83E4E60044F57D /* HeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HeaderView.swift; path = Dividendos/HeaderView.swift; sourceTree = SOURCE_ROOT; };
@@ -52,6 +59,7 @@
 		7DE35DDC2A868D970044F57D /* auxiliares.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = auxiliares.swift; sourceTree = "<group>"; };
 		7DE35DDE2A8B653E0044F57D /* PieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
 		7DE35DE32A92708F0044F57D /* ProfitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitView.swift; sourceTree = "<group>"; };
+		7DE35DE52A9907000044F57D /* ViviendasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViviendasView.swift; sourceTree = "<group>"; };
 		B80C48062A402D180047AAC0 /* Dividendos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dividendos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B80C48092A402D180047AAC0 /* DividendosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividendosApp.swift; sourceTree = "<group>"; };
 		B80C480B2A402D180047AAC0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -92,9 +100,13 @@
 			children = (
 				7DE35DD92A852DF60044F57D /* Info.plist */,
 				B80C480B2A402D180047AAC0 /* ContentView.swift */,
+				7DA58E592A9B4BF4009BD943 /* ProfileView.swift */,
+				7DE35DE52A9907000044F57D /* ViviendasView.swift */,
 				7DE35DD12A83E5240044F57D /* DetalleEmpresaView.swift */,
 				7DE35DD52A83E53A0044F57D /* model.swift */,
 				7DE35DE32A92708F0044F57D /* ProfitView.swift */,
+				7DA58E5B2A9BA1D1009BD943 /* ProfitViviendasView.swift */,
+				7DA58E5D2A9BB52E009BD943 /* ContratosView.swift */,
 				7DE35DCF2A83E5080044F57D /* charts.swift */,
 				7DE35DDA2A868C5E0044F57D /* CarteraView.swift */,
 				B80C48092A402D180047AAC0 /* DividendosApp.swift */,
@@ -207,6 +219,7 @@
 				7DE35DCA2A83E4E60044F57D /* DetalleEmpresaView.swift in Sources */,
 				7DE35DE42A92708F0044F57D /* ProfitView.swift in Sources */,
 				7DE35DDD2A868D970044F57D /* auxiliares.swift in Sources */,
+				7DE35DE62A9907000044F57D /* ViviendasView.swift in Sources */,
 				7DE35DC92A83E4E60044F57D /* model.swift in Sources */,
 				7DE35DCB2A83E4E60044F57D /* ContentView.swift in Sources */,
 				7DE35DD02A83E5080044F57D /* charts.swift in Sources */,
@@ -214,11 +227,14 @@
 				B80C480C2A402D180047AAC0 /* ContentView.swift in Sources */,
 				7DE35DD62A83E53A0044F57D /* model.swift in Sources */,
 				7DE35DD42A83E52C0044F57D /* HeaderView.swift in Sources */,
+				7DA58E5E2A9BB52E009BD943 /* ContratosView.swift in Sources */,
+				7DA58E5A2A9B4BF4009BD943 /* ProfileView.swift in Sources */,
 				B80C480A2A402D180047AAC0 /* DividendosApp.swift in Sources */,
 				7DE35DCE2A83E4E60044F57D /* charts.swift in Sources */,
 				7DE35DD82A83E5410044F57D /* services.swift in Sources */,
 				7DE35DDF2A8B653E0044F57D /* PieChartView.swift in Sources */,
 				7DE35DD22A83E5240044F57D /* DetalleEmpresaView.swift in Sources */,
+				7DA58E5C2A9BA1D1009BD943 /* ProfitViviendasView.swift in Sources */,
 				7DE35DDB2A868C5E0044F57D /* CarteraView.swift in Sources */,
 				7DE35DC82A83E4E60044F57D /* HeaderView.swift in Sources */,
 			);

@@ -74,73 +74,91 @@ struct CarteraView: View {
     
     var body: some View {
         
-        VStack {
-            Text("Cartera").font(.title)
-            
-            Text("Total Invertido \(String(format: "%.0f", getCosteTotal()))")
-            
-            Button("Mis Movimientos") {
-                showingSheet.toggle()
-            }.sheet(isPresented: $showingSheet) {
-                MovimientosView(movs: $movimientos, isName: true)
-                }.task {
-                    await loadDataMovimientos(id: UserDefaults.standard.integer(forKey: "cartera"))
-                }
-            
-            Divider()
-            
-            Text("Desglose por países ($)").font(.subheadline)
-            
-            Chart (getDesglosePorPaises(posiciones: posiciones), id: \.name) { data in
-                BarMark(
-                    x: .value("Cup", data.count)
-                )
-                .foregroundStyle(by: .value("Tipo", "\(data.name): \(String(format: "%.0f",data.count))"))
-            }.frame(height: 60).padding()
-            
-            Text("Desglose por sector (%)").font(.subheadline)
-            
-            Chart(getDesglosePorSectores(posiciones: posiciones), id: \.name) { data in
-                SectorMark(
-                    angle: .value("Ventas", data.count),
-                    innerRadius: .ratio(0.55),
-                    angularInset: 2.0
-                )
-                .foregroundStyle(by: .value("Empresa", data.name))
-                .annotation(position: .overlay) {
-                    Text("\(String(format: "%.0f", data.count*100/getCosteTotal()))%")
-                        .font(.footnote)
-                        .foregroundStyle(.white)
-                }
-            }
-            .padding()
-            .chartBackground { proxy in
-                Text("💼").font(.system(size: 45))
-            }
-            
-            // Text("Posiciones").font(.title)
-            
-            List(posiciones, id: \.id) { pos in
-                HStack {
-                    LogoView(logo: pos.empresa.logo)
-                    VStack {
-                        Text("\(String(pos.cantidad)) acc").bold()
-                        Text("PMC: \(String(format: "%.2f", pos.pmc))$").font(.caption)
+        NavigationStack {
+            VStack(alignment: .leading) {
+                Text("Cartera").font(.title)
+                
+                Text("Total Invertido \(String(format: "%.0f", getCosteTotal()))")
+                
+                Button("Mis Movimientos") {
+                    showingSheet.toggle()
+                }.sheet(isPresented: $showingSheet) {
+                    MovimientosView(movs: $movimientos, isName: true)
+                    }.task {
+                        await loadDataMovimientos(id: UserDefaults.standard.integer(forKey: "cartera"))
                     }
-                    Spacer()
-                    VStack {
-                        Text("\(String(format: "%.2f", getCoste(acciones: Double(pos.cantidad), precio: String(pos.pmc))!))€")
-                            //.foregroundColor(pos.tipo=="BUY" ? .green : .red)
-                        Text("\(String(format: "%.2f", Double(pos.cantidad)*pos.pmc*100/getCosteTotal()))%").font(.caption)
+                
+                Divider()
+                
+                Text("Desglose por países ($)").font(.subheadline)
+                
+                Chart (getDesglosePorPaises(posiciones: posiciones), id: \.name) { data in
+                    BarMark(
+                        x: .value("Cup", data.count)
+                    )
+                    .foregroundStyle(by: .value("Tipo", "\(data.name): \(String(format: "%.0f",data.count))"))
+                }.frame(height: 60).padding()
+                
+                Text("Desglose por sector (%)").font(.subheadline)
+                
+                Chart(getDesglosePorSectores(posiciones: posiciones), id: \.name) { data in
+                    SectorMark(
+                        angle: .value("Ventas", data.count),
+                        innerRadius: .ratio(0.55),
+                        angularInset: 2.0
+                    )
+                    .foregroundStyle(by: .value("Empresa", data.name))
+                    .annotation(position: .overlay) {
+                        Text("\(String(format: "%.0f", data.count*100/getCosteTotal()))%")
+                            .font(.footnote)
+                            .foregroundStyle(.white)
                     }
+                }.frame(height: 200).padding()
+                .chartBackground { proxy in
+                    Text("💼").font(.system(size: 45))
                 }
+                
+                List {
+                    Section(header: Text("DETALLE"), content: {
+                        NavigationLink(destination: {
+                            List(posiciones, id: \.id) { pos in
+                                HStack {
+                                    LogoView(logo: pos.empresa.logo)
+                                    VStack {
+                                        Text("\(String(pos.cantidad)) acc").bold()
+                                        Text("PMC: \(String(format: "%.2f", pos.pmc))$").font(.caption)
+                                    }
+                                    Spacer()
+                                    VStack {
+                                        Text("\(String(format: "%.2f", getCoste(acciones: Double(pos.cantidad), precio: String(pos.pmc))!))€")
+                                            //.foregroundColor(pos.tipo=="BUY" ? .green : .red)
+                                        Text("\(String(format: "%.2f", Double(pos.cantidad)*pos.pmc*100/getCosteTotal()))%").font(.caption)
+                                    }
+                                }
+                            }
+                        }
+                        ) {
+                            Label("Posiciones", systemImage: "bag")
+                        }
+                        NavigationLink(destination: {
+                            MovimientosView(movs: $movimientos)
+                        })
+                        {
+                            Label("Movimientos", systemImage: "folder")
+                        }
+                        NavigationLink(destination: ProfitView()){
+                            Label("Balance", systemImage: "chart.xyaxis.line")
+                        }
+                    })
+                    
+                    
+                    .task {
+                        await loadDataCartera(id: UserDefaults.standard.integer(forKey: "cartera"))
+                    }
+                }.navigationBarTitleDisplayMode(.automatic)
+                
             }
-            .task {
-                await loadDataCartera(id: UserDefaults.standard.integer(forKey: "cartera"))
-            }
-            
-        }
-        
+        }.padding()
         
     }
 }

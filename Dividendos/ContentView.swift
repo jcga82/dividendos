@@ -8,27 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
+    
     var body: some View {
         TabView {
-            EmpresasView()
-                .tabItem {
-                    Image(systemName: "house.fill")
-                    Text("Home")
-                }
             CarteraView()
                 .tabItem {
                     Image(systemName: "basket.fill")
-                    Text("Cartera")
+                    Text("Bolsa")
                 }
-            ProfitView()
+            EmpresasView()
                 .tabItem {
-                    Image(systemName: "chart.xyaxis.line")
-                    Text("Balance")
+                    Image(systemName: "cart.fill")
+                    Text("Empresas")
                 }
+            
             ChartsView()
                 .tabItem {
                     Image(systemName: "giftcard.fill")
                     Text("Dividendos")
+                }
+            ViviendasView()
+                .tabItem {
+                    Image(systemName: "house.fill")
+                    Text("Viviendas")
                 }
             ProfileView()
                 .tabItem {
@@ -119,6 +121,7 @@ struct EmpresasView: View {
                             .navigationBarHidden(false)
             }.onAppear{
                 viewModel.executeAPI()
+                UserDefaults.standard.set(9, forKey: "cartera")
                 //saveData()
             }
         }
@@ -138,76 +141,7 @@ struct EmpresasView: View {
 }
 
 
-struct ProfileView: View {
-    
-    @State private var carteras = [Cartera]()
-    @State private var selectedCartera:Cartera?
-    
-    func loadCarteras() async {
-        
-        UserDefaults.standard.set(9, forKey: "cartera")
-        
-        guard let url = URL(string: "https://hamperblock.com/django/carteras" ) else {
-            print("Invalid URL")
-            return
-        }
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            if let decodedResponse = try? JSONDecoder().decode(ResponseCar.self, from: data) {
-                carteras = decodedResponse.results
-                print(carteras)
-            }
-        } catch {
-            print("ERROR: No hay carteras")
-        }
-    }
-    
-    var body: some View {
-            NavigationView {
-                List {
-                    Section() {
-                        VStack() {
-                            Image("logo")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                            Text("HBLOCK50")
-                            Text("v0.1 beta").font(.footnote)
-                            Form {
-                                Picker("Cartera:", selection: $selectedCartera) {
-                                            ForEach(carteras, id: \.self) {
-                                                Text($0.nombre).tag($0 as Cartera?)
-                                            }
-                                        }
-                                        .onChange(of: selectedCartera) {
-                                            print("ID Cartera select: \(selectedCartera?.id ?? 0)")
-                                            UserDefaults.standard.set(selectedCartera?.id, forKey: "cartera")
-                                        }
-                                    }
-                            NavigationLink(destination: Text("Pendiente...")) {
-                                Label("Avanzado", systemImage: "slider.horizontal.3")
-                            }
-                        }
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                        .frame(height: 250)
-                        Section() {
-                            NavigationLink(destination: Text("Pendiente...")) {
-                                Label("Modo oscuro", systemImage: "paintpalette")
-                            }
-                        }
-                    }
-//                            NavigationLink(destination: Text("aaa")) {
-//                                Label("Colors", systemImage: "paintpalette")
-//                            }
-                }
-                .navigationBarTitle("Opciones")
-                .navigationBarTitleDisplayMode(.inline)
-            }
-            .accentColor(.accentColor)
-            .task {
-                await loadCarteras()
-            }
-        }
-    }
+
 
 struct StakingCard: View {
     var message: String

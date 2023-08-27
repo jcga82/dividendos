@@ -27,6 +27,18 @@ struct ResponseDiv: Codable {
     var results: [Dividendo]
 }
 
+struct ResponseViv: Codable {
+    var results: [Vivienda]
+}
+
+struct ResponseRent: Codable {
+    var results: [Renta]
+}
+
+//struct ResponseCont: Codable {
+//    var results: [Contrato]
+//}
+
 struct Result: Codable {
     var id: Int
     var captura: String
@@ -99,7 +111,16 @@ struct Profit: Codable, Identifiable {
     let balance: Double
     let dividendos: Double
     let aportado_total: Double
-    
+}
+
+struct Renta: Codable, Identifiable {
+    let id: Int
+    let cartera: Cartera
+    let vivienda: Vivienda
+    let tipo: String
+    let fecha_cobro: String
+    let cantidad: Double
+    let pagada: Bool
 }
 
 struct Dividendo: Codable, Identifiable {
@@ -124,6 +145,75 @@ struct Dividendo: Codable, Identifiable {
     }
 }
 
+struct Vivienda: Codable, Hashable {
+    let id: Int
+    let cartera: Cartera
+    let tipo: String
+    let direccion: String
+    let comunidad: String
+    let valor_cv: Double
+    let gastos_cv: Double
+    let gastos_reforma: Double
+    let ingresos_mensuales: Double
+    let gastos_ibi: Double
+    let gastos_seguros: Double
+    let gastos_comunidad: Double
+    let financiacion: Bool;
+    let pct_finan: Double?
+    let plazo: Double?
+    let interes: Double?
+    let itp: Double?
+    let total_compra: Double?
+    let gastos_anuales: Double?
+    let rent_bruta: Double?
+    let rent_neta: Double?
+    let valor_hipoteca: Double?
+    let capital_aportar: Double?
+    let cuota_hipoteca_mes: Double?
+    let cash_flow: Double?
+    let roce: Double?
+    
+    init(id: Int, cartera: Cartera, tipo: String, direccion: String, comunidad: String, valor_cv: Double, gastos_cv: Double, gastos_reforma: Double, ingresos_mensuales: Double, gastos_ibi: Double, gastos_seguros: Double, gastos_comunidad: Double, financiacion: Bool, pct_finan: Double?, plazo: Double?, interes: Double?, itp: Double?, total_compra: Double?, gastos_anuales: Double?, rent_bruta: Double?, rent_neta: Double?, valor_hipoteca: Double?, capital_aportar: Double?, cuota_hipoteca_mes: Double?, cash_flow: Double?, roce: Double?) {
+        self.id = id
+        self.cartera = cartera
+        self.tipo = tipo
+        self.direccion = direccion
+        self.comunidad = comunidad
+        self.valor_cv = valor_cv
+        self.gastos_cv = gastos_cv
+        self.gastos_reforma = gastos_reforma
+        self.ingresos_mensuales = ingresos_mensuales
+        self.gastos_ibi = gastos_ibi
+        self.gastos_seguros = gastos_seguros
+        self.gastos_comunidad = gastos_comunidad
+        self.financiacion = financiacion
+        self.pct_finan = pct_finan
+        self.plazo = plazo
+        self.interes = interes
+        self.itp = itp
+        self.total_compra = total_compra
+        self.gastos_anuales = gastos_anuales
+        self.rent_bruta = rent_bruta
+        self.rent_neta = rent_neta
+        self.valor_hipoteca = valor_hipoteca
+        self.capital_aportar = capital_aportar
+        self.cuota_hipoteca_mes = cuota_hipoteca_mes
+        self.cash_flow = cash_flow
+        self.roce = roce
+    }
+    
+}
+
+struct Contrato: Codable, Hashable {
+    let id: Int
+    let nif: String
+    let vivienda: Vivienda
+    let fecha_desde: String
+    let fecha_hasta: String
+    let importe_mes: Double
+    let alquilado: Bool
+}
+
 struct AnalisisEmpresa: Decodable {
     let id: Int
     let captura: String
@@ -145,6 +235,39 @@ struct AnalisisEmpresa: Decodable {
     
     func getString() {
         print( "Id: \(id), captura: \(captura), descripcion: \(descripcion), fecha: \(fecha) ")
+    }
+}
+
+struct modelo720 {
+    let dni: String
+    let text: String
+    let status: String
+    let ib_country: String
+    let degiro_country: String
+    let eurusd: String
+    let filename: String
+    let filenameDegiro: String
+    let active_page: Double
+    let modalShow: Bool
+    let name: String
+    //let forex: { [name: String]: forex }
+    let participation: Double
+    let declarant_condition: Double
+    
+    init(dni: String, text: String, ib_country: String, degiro_country: String, eurusd: String, filename: String, filenameDegiro: String, active_page: Double, modalShow: Bool, name: String, declarant_condition: Double) {
+        self.dni = dni
+        self.text = text
+        self.status = "dark"
+        self.ib_country = ib_country
+        self.degiro_country = degiro_country
+        self.eurusd = eurusd
+        self.filename = filename
+        self.filenameDegiro = filenameDegiro
+        self.active_page = 1
+        self.modalShow = modalShow
+        self.name = name
+        self.participation = 100
+        self.declarant_condition = declarant_condition
     }
 }
 
