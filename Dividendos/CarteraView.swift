@@ -74,22 +74,16 @@ struct CarteraView: View {
     
     var body: some View {
         
-        NavigationStack {
-            VStack(alignment: .leading) {
-                Text("Cartera").font(.title)
-                
-                Text("Total Invertido \(String(format: "%.0f", getCosteTotal()))")
-                
-                Button("Mis Movimientos") {
-                    showingSheet.toggle()
-                }.sheet(isPresented: $showingSheet) {
-                    MovimientosView(movs: $movimientos, isName: true)
-                    }.task {
-                        await loadDataMovimientos(id: UserDefaults.standard.integer(forKey: "cartera"))
-                    }
-                
-                Divider()
-                
+        NavigationView {
+            VStack() {
+                Text("Total Invertido \(String(format: "%.0f", getCosteTotal()))").bold()
+//                Button("Mis Movimientos") {
+//                    showingSheet.toggle()
+//                }.sheet(isPresented: $showingSheet) {
+//                    MovimientosView(movs: $movimientos, isName: true)
+//                    }.task {
+//                        await loadDataMovimientos(id: UserDefaults.standard.integer(forKey: "cartera"))
+//                    }
                 Text("Desglose por países ($)").font(.subheadline)
                 
                 Chart (getDesglosePorPaises(posiciones: posiciones), id: \.name) { data in
@@ -121,6 +115,12 @@ struct CarteraView: View {
                 List {
                     Section(header: Text("DETALLE"), content: {
                         NavigationLink(destination: {
+                            EmpresasView()
+                        })
+                        {
+                            Label("Rádar Empresas", systemImage: "basket.fill")
+                        }
+                        NavigationLink(destination: {
                             List(posiciones, id: \.id) { pos in
                                 HStack {
                                     LogoView(logo: pos.empresa.logo)
@@ -138,27 +138,31 @@ struct CarteraView: View {
                             }
                         }
                         ) {
-                            Label("Posiciones", systemImage: "bag")
+                            Label("Mis Posiciones", systemImage: "bag.fill")
                         }
                         NavigationLink(destination: {
                             MovimientosView(movs: $movimientos)
                         })
                         {
-                            Label("Movimientos", systemImage: "folder")
+                            Label("Mis Movimientos", systemImage: "folder.fill")
                         }
                         NavigationLink(destination: ProfitView()){
-                            Label("Balance", systemImage: "chart.xyaxis.line")
+                            Label("Mi Balance", systemImage: "chart.xyaxis.line")
                         }
                     })
                     
                     
                     .task {
                         await loadDataCartera(id: UserDefaults.standard.integer(forKey: "cartera"))
+                        await loadDataMovimientos(id: UserDefaults.standard.integer(forKey: "cartera"))
                     }
-                }.navigationBarTitleDisplayMode(.automatic)
+                }
+                .navigationBarTitle("Cartera Bolsa")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarHidden(false)
                 
             }
-        }.padding()
+        }
         
     }
 }

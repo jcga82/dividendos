@@ -28,6 +28,12 @@ func getYearsDividend(year: Int) -> Int {
     return currentYear - year
 }
 
+func findPosicionesSymbol(posiciones: [Posicion], symbol: String) -> Double {
+    let amount = posiciones.first{$0.empresa.symbol == symbol}
+    print("eee", amount as Any)
+    return Double(amount!.cantidad)
+}
+
 func getDesglosePorPaises(posiciones: [Posicion]) -> [Desglose] {
     let eeuu = posiciones.reduce(0, { result, info in
         if (info.empresa.pais == "eeuu") {
@@ -87,6 +93,14 @@ func getActivosInmo(viviendas: [Vivienda]) -> [Desglose] {
     var desgloses:[Desglose] = []
     viviendas.forEach {
         desgloses.append(Desglose(name: $0.direccion, count: $0.valor_cv))
+    }
+    return desgloses
+}
+
+func getDesgloseRentas(rentas: [Renta]) -> [Desglose] {
+    var desgloses:[Desglose] = []
+    rentas.forEach {
+        desgloses.append(Desglose(name: $0.tipo, count: $0.cantidad))
     }
     return desgloses
 }

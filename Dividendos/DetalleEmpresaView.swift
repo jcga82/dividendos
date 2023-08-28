@@ -50,7 +50,7 @@ struct DetalleEmpresaView: View {
             if let decodedResponse = try? JSONDecoder().decode(ResponseMov.self, from: data) {
                 let all_movimientos = decodedResponse.results
                 movimientos = all_movimientos.filter { item in
-                    if (item.cartera.nombre == "Div JC") {
+                    if (item.cartera.id == id) {
                         return true
                     } else {
                         return false
@@ -148,7 +148,7 @@ struct DetalleEmpresaView: View {
                 showingSheet.toggle()
             }
             .sheet(isPresented: $showingSheet) {
-                MovimientosView(movs: $movimientos)
+                MovimientosView(movs: $movimientos, isVolver: true)
             }.task {
                 await loadDataMovimientos(symbol: empresa.symbol, id: UserDefaults.standard.integer(forKey: "cartera"))
             }
@@ -192,7 +192,7 @@ struct DetalleEmpresaView: View {
 
 struct MovimientosView: View {
     @Binding public var movs: [Movimiento]
-    var isName: Bool = false
+    var isVolver: Bool = false
     @Environment(\.presentationMode) var presentationMode
     @State private var tipoSecleccionado = 0
     
@@ -200,7 +200,7 @@ struct MovimientosView: View {
     var body: some View {
         
         VStack {
-            Button("Volver") {
+            Button(isVolver ? "Volver" : "") {
                 presentationMode.wrappedValue.dismiss()
 
             }.onAppear {
@@ -232,7 +232,7 @@ struct MovimientosView: View {
                 VStack {
                     HStack {
                         Text("\(String(format: "%.0f", mov.acciones)) acc")
-                        Text(isName ? "@\(mov.empresa.symbol)" : "")
+                        Text(isVolver ? "@\(mov.empresa.symbol)" : "")
                     }
                     Text("\(String(format: "%.2f", Double(mov.precio)!))€").font(.footnote)
                     }

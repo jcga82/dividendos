@@ -28,12 +28,6 @@ struct ChartsView: View {
     @State var dividendos = [Dividendo]()
     @State var activos: [String] = []
     
-    func findAccionesEmpresa(symbol: String) -> Double {
-        let amount = posiciones.first{$0.empresa.symbol == symbol}
-        print("eee", amount as Any)
-        return Double(amount!.cantidad)
-    }
-    
     func loadDataCartera(id: Int) async {
         guard let url = URL(string: "https://hamperblock.com/django/posiciones" ) else {
             print("Invalid URL")
@@ -69,7 +63,7 @@ struct ChartsView: View {
                 let dividendos2023 = decodedResponse.filter { activos.contains($0.empresa.symbol) && $0.payable_date.contains("2023") }
                 //dividendos = dividendos2023
                 dividendos = dividendos2023.map { item in
-                    Dividendo(id: item.id, date: item.date, dividendo: findAccionesEmpresa(symbol: item.empresa.symbol)*item.dividendo, ex_dividend: item.ex_dividend, payable_date: item.payable_date, frequency: item.frequency, tipo: item.tipo, empresa: item.empresa)
+                    Dividendo(id: item.id, date: item.date, dividendo: findPosicionesSymbol(posiciones: posiciones, symbol: item.empresa.symbol)*item.dividendo, ex_dividend: item.ex_dividend, payable_date: item.payable_date, frequency: item.frequency, tipo: item.tipo, empresa: item.empresa)
                 }
                 //dividendos.forEach { print($0) }
                 print("hay \(dividendos2023.count) dividendos")
@@ -126,18 +120,11 @@ struct ChartsView: View {
     
     var body: some View {
         VStack {
-            Picker("Año", selection: $yearSelected) {
-                Text("2023").tag(2023)
-                Text("2022").tag(2022)
-            }
-            .pickerStyle(.segmented)
-            .padding(.horizontal)
-            
             Image(systemName: "dollarsign.circle.fill")
                 .imageScale(.large)
                 .foregroundColor(.accentColor)
             Text("Dividendos").font(.title)
-            Text("PADI 2023: \(String(format: "%.2f", getDiv()))€").font(.headline)
+            Text("PADI 2024: \(String(format: "%.2f", getDiv()))€").font(.headline)
             Text("Mensual: \(String(format: "%.2f", getDiv()/12))€")
             Text("YOC: \(String(format: "%.2f", getRentabilidad()))%")
             
@@ -168,6 +155,13 @@ struct ChartsView: View {
                         AxisGridLine()
                     }
             }
+            
+            Picker("Año", selection: $yearSelected) {
+                Text("2023").tag(2023)
+                Text("2022").tag(2022)
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal)
             
             Text("Nº Dividendos anuales: \(dividendos.count)")
             

@@ -11,17 +11,16 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
+            DashboardView()
+                .tabItem {
+                    Image(systemName: "house.fill")
+                    Text("Dashboard")
+                }
             CarteraView()
                 .tabItem {
                     Image(systemName: "basket.fill")
                     Text("Bolsa")
                 }
-            EmpresasView()
-                .tabItem {
-                    Image(systemName: "cart.fill")
-                    Text("Empresas")
-                }
-            
             ChartsView()
                 .tabItem {
                     Image(systemName: "giftcard.fill")
@@ -121,14 +120,9 @@ struct EmpresasView: View {
                             .navigationBarHidden(false)
             }.onAppear{
                 viewModel.executeAPI()
-                UserDefaults.standard.set(9, forKey: "cartera")
-                //saveData()
+                UserDefaults.standard.set(9, forKey: "cartera") //revisar esto
             }
         }
-//        .tabItem {
-//            Image(systemName: "house.fill")
-//            Text("Home")
-//        }
     }
     
     var searchResults: [Empresa] {

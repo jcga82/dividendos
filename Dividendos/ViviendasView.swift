@@ -64,6 +64,7 @@ struct ViviendasView: View {
             if let decodedResponse = try? JSONDecoder().decode(ResponseRent.self, from: data) {
                 print(decodedResponse)
                 rentas = decodedResponse.results.filter { item in
+                    //todo filtrar solo tipo "Viviendas"
                     if (item.cartera.id == id) {
                         return true
                     } else {

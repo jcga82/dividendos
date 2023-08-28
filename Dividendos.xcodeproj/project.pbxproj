@@ -34,6 +34,7 @@
 		B80C480C2A402D180047AAC0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80C480B2A402D180047AAC0 /* ContentView.swift */; };
 		B80C480E2A402D1A0047AAC0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B80C480D2A402D1A0047AAC0 /* Assets.xcassets */; };
 		B80C48112A402D1A0047AAC0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B80C48102A402D1A0047AAC0 /* Preview Assets.xcassets */; };
+		B83BF8C32A9CB88D00BBED45 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83BF8C22A9CB88D00BBED45 /* DashboardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +66,7 @@
 		B80C480B2A402D180047AAC0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B80C480D2A402D1A0047AAC0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B80C48102A402D1A0047AAC0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		B83BF8C22A9CB88D00BBED45 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,7 +101,9 @@
 			isa = PBXGroup;
 			children = (
 				7DE35DD92A852DF60044F57D /* Info.plist */,
+				B80C48092A402D180047AAC0 /* DividendosApp.swift */,
 				B80C480B2A402D180047AAC0 /* ContentView.swift */,
+				B83BF8C22A9CB88D00BBED45 /* DashboardView.swift */,
 				7DA58E592A9B4BF4009BD943 /* ProfileView.swift */,
 				7DE35DD12A83E5240044F57D /* DetalleEmpresaView.swift */,
 				7DE35DD52A83E53A0044F57D /* model.swift */,
@@ -109,7 +113,6 @@
 				7DA58E5D2A9BB52E009BD943 /* ContratosView.swift */,
 				7DE35DCF2A83E5080044F57D /* charts.swift */,
 				7DE35DDA2A868C5E0044F57D /* CarteraView.swift */,
-				B80C48092A402D180047AAC0 /* DividendosApp.swift */,
 				7DE35DDE2A8B653E0044F57D /* PieChartView.swift */,
 				7DE35DD32A83E52C0044F57D /* HeaderView.swift */,
 				7DE35DD72A83E5410044F57D /* services.swift */,
@@ -234,6 +237,7 @@
 				7DE35DD82A83E5410044F57D /* services.swift in Sources */,
 				7DE35DDF2A8B653E0044F57D /* PieChartView.swift in Sources */,
 				7DE35DD22A83E5240044F57D /* DetalleEmpresaView.swift in Sources */,
+				B83BF8C32A9CB88D00BBED45 /* DashboardView.swift in Sources */,
 				7DA58E5C2A9BA1D1009BD943 /* ProfitViviendasView.swift in Sources */,
 				7DE35DDB2A868C5E0044F57D /* CarteraView.swift in Sources */,
 				7DE35DC82A83E4E60044F57D /* HeaderView.swift in Sources */,
