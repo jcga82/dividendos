@@ -113,16 +113,6 @@ struct Profit: Codable, Identifiable {
     let aportado_total: Double
 }
 
-struct Renta: Codable, Identifiable {
-    let id: Int
-    let cartera: Cartera
-    let vivienda: Vivienda
-    let tipo: String
-    let fecha_cobro: String
-    let cantidad: Double
-    let pagada: Bool
-}
-
 struct Dividendo: Codable, Identifiable {
     let id: Int
     let date: String
@@ -202,6 +192,16 @@ struct Vivienda: Codable, Hashable {
         self.roce = roce
     }
     
+}
+
+struct Renta: Codable, Identifiable {
+    let id: Int
+    let cartera: Cartera
+    let tipo: String
+    let fecha_cobro: String
+    let cantidad: Double
+    let pagada: Bool
+    let vivienda: Vivienda?
 }
 
 struct Contrato: Codable, Hashable {

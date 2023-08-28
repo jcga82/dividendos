@@ -12,6 +12,7 @@ struct ViviendasView: View {
     
     @State var viviendas = [Vivienda]()
     @State var contratos = [Contrato]()
+    @State var rentas = [Renta]()
     @State var num_contratos = 0
     
     func loadDataViviendas(id: Int) async {
@@ -52,35 +53,75 @@ struct ViviendasView: View {
         }
     }
     
+    func loadDataAlquileres(id: Int) async {
+        guard let url = URL(string: "https://hamperblock.com/django/rentas/") else {
+            print("Invalid URL")
+            return
+        }
+        do {
+            let (data, result) = try await URLSession.shared.data(from: url)
+            print(result)
+            if let decodedResponse = try? JSONDecoder().decode(ResponseRent.self, from: data) {
+                print(decodedResponse)
+                rentas = decodedResponse.results.filter { item in
+                    if (item.cartera.id == id) {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+                print("hay \(rentas.count) rentas de alquileres")
+            }
+        } catch {
+            print("ERROR: No hay rentas")
+        }
+    }
+    
+    func getTotalCobrado() -> Double {
+        return rentas.reduce(0, { result, info in
+            print(result, info)
+            let value = info.pagada ? info.cantidad : 0.0
+            return result + value
+        })
+    }
+    
+    func getPendiente() -> Double {
+        return rentas.reduce(0, { result, info in
+            return result + info.cantidad
+        })
+    }
+    
     var body: some View {
         NavigationView {
             
             VStack {
+                Text("Desglose de Activos").font(.subheadline)
                 HStack {
-                    Chart(viviendas, id: \.id) { data in
+                    Chart(getActivosInmo(viviendas: viviendas), id: \.name) { data in
                         SectorMark(
-                            angle: .value("Ventas", data.valor_cv),
+                            angle: .value("Ventas", data.count),
                             innerRadius: .ratio(0.55),
                             angularInset: 2.0
                         )
-                    }.frame(height: 130)
+                        .foregroundStyle(by: .value("Empresa", data.name))
+                    }.frame(height: 150)
                     .chartBackground { proxy in
                         Text("🏠").font(.system(size: 35))
                     }
                     Spacer()
                     VStack(alignment:.leading) {
-                        Text("Alquilado: 1").foregroundColor(.green)
-                        Text("Libre: 2")
-                        Text("Total: \(contratos.count)").bold()
+                        Text("Alquilado: \(contratos.filter{$0.alquilado}.count)").foregroundColor(.green)
+                        Text("Libre: \(viviendas.count - contratos.filter{$0.alquilado}.count)").foregroundColor(.red)
+                        Text("Total: \(viviendas.count)").bold()
                     }
                 }.padding()
                 
                 Divider()
                 
                 VStack(alignment:.leading) {
-                    Text("Cobrado: 0").foregroundColor(.green)
-                    Text("No cobrado: 0").foregroundColor(.red)
-                    Text("Total: 0")
+                    Text("Cobrado: \(String(format: "%.0f", getTotalCobrado()))€").foregroundColor(.green)
+                    Text("Pendiente: \(String(format: "%.0f", getPendiente()))€").foregroundColor(.red)
+                    Text("Total: \(String(format: "%.0f", getTotalCobrado() + getPendiente()))€").bold()
                 }
                 
                 
@@ -113,6 +154,7 @@ struct ViviendasView: View {
         }.task {
             await loadDataViviendas(id: UserDefaults.standard.integer(forKey: "cartera"))
             await loadDataContratos()
+            await loadDataAlquileres(id: UserDefaults.standard.integer(forKey: "cartera"))
         }
     }
 }

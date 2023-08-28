@@ -83,6 +83,14 @@ func getDesglosePorSectores(posiciones: [Posicion]) -> [Desglose] {
     Desglose(name: "Tecnología", count: tecnologia), Desglose(name: "Salud", count: salud), Desglose(name: "Cíclico", count: consumoCic)]
 }
 
+func getActivosInmo(viviendas: [Vivienda]) -> [Desglose] {
+    var desgloses:[Desglose] = []
+    viviendas.forEach {
+        desgloses.append(Desglose(name: $0.direccion, count: $0.valor_cv))
+    }
+    return desgloses
+}
+
 func getEmpresa(symbol: String) async -> Empresa {
     var empresa = Empresa(id: 1, nombre: "", logo: "", cabecera: "", isin: "", estrategia: "", pais: "", sector: "", symbol: "", description: "", dividendo_desde: "", tipo: "", pub_date: "")
     

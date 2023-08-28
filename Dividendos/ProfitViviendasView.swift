@@ -18,12 +18,12 @@ struct ProfitViviendaView: View {
             return
         }
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
+            let (data, result) = try await URLSession.shared.data(from: url)
+            print(result)
             if let decodedResponse = try? JSONDecoder().decode(ResponseRent.self, from: data) {
                 print(decodedResponse)
                 rentas = decodedResponse.results.filter { item in
-                    if (item.vivienda.cartera.id == id) {
-                        //revisar esto
+                    if (item.cartera.id == id) {
                         return true
                     } else {
                         return false
@@ -63,23 +63,18 @@ struct ProfitViviendaView: View {
             //Text("Fecha: \(profits.last?.fecha ?? "N/D")")
             Text("Rentabilidad: \(String(format: "%.2f", getRentabilidad()))%").foregroundColor(.green)
             
-//            Chart(profits) { data in
-//                BarMark(x: .value("Fecha", getDateShort(fecha: data.fecha)!, unit: .day),
-//                        y: .value("Beneficio", data.valor))
-//                RuleMark(y: .value("Media", data.aportado_total))
-//                    .foregroundStyle(.red)
-//            }
-//            .frame(width: 350, height: 200)
-//            .task {
-//                await loadDataProfits(id: UserDefaults.standard.integer(forKey: "cartera"))
-//            }
-//            .chartXAxis {
-//                    AxisMarks(values: .stride(by: .month)) { day in
-//                        AxisValueLabel(format: .dateTime.month(.abbreviated))
-//                        AxisTick()
-//                        AxisGridLine()
-//                    }
-//            }
+            Chart(rentas) { data in
+                BarMark(x: .value("Fecha", getDateShort(fecha: data.fecha_cobro)!, unit: .month),
+                        y: .value("Beneficio", data.cantidad))
+            }
+            .frame(width: 350, height: 200)
+            .chartXAxis {
+                    AxisMarks(values: .stride(by: .month)) { day in
+                        AxisValueLabel(format: .dateTime.month(.abbreviated))
+                        AxisTick()
+                        AxisGridLine()
+                    }
+            }
             
             List(rentas.sorted { $0.fecha_cobro > $1.fecha_cobro }, id: \.id) { renta in
                 HStack {
@@ -87,11 +82,13 @@ struct ProfitViviendaView: View {
                         Text("\(String(renta.fecha_cobro))")
                         Text("\(String(format: "%.2f", renta.cantidad))€").font(.footnote)
                     }
-                    Text(renta.vivienda.direccion).font(.footnote)
                     Spacer()
-                    Image(systemName: renta.pagada ? "creditcard.circle" : "creditcard.circle.fill")
-                        .foregroundColor( renta.pagada ? .green : .red)
-                        .font(.system(size: 30))
+                    VStack {
+                        Image(systemName: renta.pagada ? "creditcard.circle" : "creditcard.circle.fill")
+                            .foregroundColor( renta.pagada ? .green : .red)
+                            .font(.system(size: 25))
+                        Text(renta.vivienda?.direccion ?? "Dividendo").font(.footnote)
+                    }
                 }
             }
             .navigationTitle("Ingresos alquileres")
