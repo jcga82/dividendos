@@ -8,11 +8,6 @@
 import SwiftUI
 import Charts
 
-struct Desglose {
-    var name: String
-    var count: Double
-}
-
 struct CarteraView: View {
     
     @State var posiciones = [Posicion]()
@@ -77,6 +72,7 @@ struct CarteraView: View {
         NavigationView {
             VStack() {
                 Text("Total Invertido \(String(format: "%.0f", getCosteTotal()))").bold()
+                Divider()
 //                Button("Mis Movimientos") {
 //                    showingSheet.toggle()
 //                }.sheet(isPresented: $showingSheet) {

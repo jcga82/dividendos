@@ -232,13 +232,13 @@ struct MovimientosView: View {
                 VStack {
                     HStack {
                         Text("\(String(format: "%.0f", mov.acciones)) acc")
-                        Text(isVolver ? "@\(mov.empresa.symbol)" : "")
+                        Text(isVolver ? "" : "@\(mov.empresa.symbol)")
                     }
                     Text("\(String(format: "%.2f", Double(mov.precio)!))€").font(.footnote)
                     }
                 Spacer()
                 VStack {
-                    Text("\(String(format: "%.2f", getCoste(acciones: mov.acciones, precio: mov.precio)!))€")
+                    Text("\(String(format: "%.2f", getCoste(acciones: mov.acciones, precio: mov.precio)!))€").font(.footnote).bold()
                         .foregroundColor(mov.tipo=="BUY" ? .green : .red)
                     Text(String(format: "%.0f", mov.total_acciones)).bold()
                 }

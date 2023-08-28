@@ -75,13 +75,6 @@ struct ChartsView: View {
     
     //let result = Dictionary(grouping: dividendos.filter({ $0.empresa.id}), by: { $0.dividendo })
     
-    func averageOfViews() -> Double {
-        let totalView = dividendos.reduce(0, { result, info in
-            return result + info.dividendo
-        })
-        return Double(totalView/12)
-    }
-    
     
     @State private var yearSelected = 2023
     @State var div = 1500
@@ -90,6 +83,10 @@ struct ChartsView: View {
         dividendos.reduce(0, { result, info in
             return result + info.dividendo
         })
+    }
+    
+    func mediaDividendos() -> Double {
+        return Double(getDiv()/12)
     }
     
     func getRentabilidad() -> Double {
@@ -126,21 +123,21 @@ struct ChartsView: View {
             Text("Dividendos").font(.title)
             Text("PADI 2024: \(String(format: "%.2f", getDiv()))€").font(.headline)
             Text("Mensual: \(String(format: "%.2f", getDiv()/12))€")
-            Text("YOC: \(String(format: "%.2f", getRentabilidad()))%")
+            Text("YOC: \(String(format: "%.2f", getRentabilidad()))%").foregroundStyle(.green)
             
-            Chart(dividendos) { data in
-                BarMark(x: .value("Fecha", getDateShort(fecha: data.payable_date)!, unit: .month),
-                        y: .value("Dividendos", data.dividendo))
+            Chart(getDesgloseDividendosMensual(dividendos: dividendos)) { data in
+                BarMark(x: .value("Fecha", data.date, unit: .month),
+                        y: .value("Dividendos", data.count))
                 .annotation(position: .top, alignment: .center) {
-                    Text("\(String(format: "%.2f", data.dividendo))")
-                        .font(.footnote)
+                    Text("\(String(format: "%.0f", data.count))")
+                        .font(.system(size: 10))
                 }
                     .foregroundStyle(.yellow)
-                RuleMark(y: .value("Media", averageOfViews()))
-                    .foregroundStyle(.orange)
+                RuleMark(y: .value("Media", getDiv()/12))
+                    .foregroundStyle(.gray)
                     .annotation(position: .top, alignment: .leading) {
-                        Label("\(Int(averageOfViews()))", systemImage: "eye.fill")
-                            .foregroundColor(.orange)
+                        Label("\(Int(getDiv()/12))", systemImage: "flag.checkered")
+                            .foregroundColor(.gray)
                             .font(.footnote)
                             .bold()
                     }
@@ -163,7 +160,7 @@ struct ChartsView: View {
             .pickerStyle(.segmented)
             .padding(.horizontal)
             
-            Text("Nº Dividendos anuales: \(dividendos.count)")
+            Text("Nº Dividendos anuales: \(dividendos.count)").font(.footnote)
             
             VStack {
 //                Picker("Sort By", selection: $sortOption) {
@@ -175,10 +172,14 @@ struct ChartsView: View {
                 List(dividendos.sorted { $0.payable_date < $1.payable_date }, id: \.id) { div in
                     HStack {
                         LogoView(logo: div.empresa.logo)
-                        Text("\(String(div.payable_date))")
+                        VStack{
+                            Text("\(String(div.payable_date))")
+                            Text("Ex: \(String(div.ex_dividend))").font(.footnote)
+                        }
                         Spacer()
                         VStack {
                             Text("\(String(format: "%.2f", div.dividendo))$")
+                            Text("Ret. \(String(format: "%.2f", div.dividendo*0.19))$").font(.footnote).foregroundStyle(.gray)
                         }
                     }
                 }

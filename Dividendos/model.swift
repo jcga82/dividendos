@@ -7,6 +7,17 @@
 
 import Foundation
 
+struct Desglose {
+    var name: String
+    var count: Double
+}
+
+struct DesgloseBar: Identifiable {
+    var id: Int    
+    var date: Date
+    var count: Double
+}
+
 struct Response: Codable {
     var results: [Result]
 }

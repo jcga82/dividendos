@@ -30,7 +30,7 @@ func getYearsDividend(year: Int) -> Int {
 
 func findPosicionesSymbol(posiciones: [Posicion], symbol: String) -> Double {
     let amount = posiciones.first{$0.empresa.symbol == symbol}
-    print("eee", amount as Any)
+    //print("eee", amount as Any)
     return Double(amount!.cantidad)
 }
 
@@ -97,11 +97,36 @@ func getActivosInmo(viviendas: [Vivienda]) -> [Desglose] {
     return desgloses
 }
 
+func getDividendosMes(mes: Int, dividendos: [Dividendo]) -> Double {
+    let yearMonth = DateComponents(month: mes)
+    return dividendos.reduce(0, {
+        Calendar.current.dateComponents([.month], from: getDateShort(fecha: $1.payable_date)!) == yearMonth ? $0 + $1.dividendo : $0
+    })
+}
+
+func getDesgloseDividendosMensual(dividendos: [Dividendo]) -> [DesgloseBar] {
+    var desgloses:[DesgloseBar] = []
+    for i in 1...12 {
+        desgloses.append(DesgloseBar(id: i, date: Calendar.current.date(from: DateComponents(month: i))!, count: getDividendosMes(mes: i, dividendos: dividendos)))
+    }
+    print(desgloses)
+    return desgloses
+}
+
 func getDesgloseRentas(rentas: [Renta]) -> [Desglose] {
     var desgloses:[Desglose] = []
-    rentas.forEach {
-        desgloses.append(Desglose(name: $0.tipo, count: $0.cantidad))
-    }
+    let rents = rentas.reduce(0, { result, info in
+        if (info.tipo == "Viviendas") {
+            return result + Double(info.cantidad)
+        } else { return result }
+    })
+    let divs = rentas.reduce(0, { result, info in
+        if (info.tipo == "Dividendos") {
+            return result + Double(info.cantidad)
+        } else { return result }
+    })
+    desgloses.append(Desglose(name: "Viviendas", count: rents))
+    desgloses.append(Desglose(name: "Dividendos", count: divs))
     return desgloses
 }
 
