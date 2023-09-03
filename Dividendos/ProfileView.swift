@@ -25,7 +25,7 @@ struct ProfileView: View {
     func loadCarteras(username: String) async {
         print("entro a cargar carteras de: ", username)
         let id_cartera = UserDefaults.standard.integer(forKey: "cartera")
-        let url = URL(string: "https://hamperblock.com/django/carteras")!
+        let url = URL(string: "https://hamperblock.com/django/carteras/")!
         let token = UserDefaults.standard.value(forKey: "token")
         //print(token)
         var request = URLRequest(url: url)
@@ -33,8 +33,7 @@ struct ProfileView: View {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.setValue("Token \( token ?? "")", forHTTPHeaderField: "Authorization")
         do {
-            let (data, response) = try await URLSession.shared.data(for: request)
-            print(request, response)
+            let (data, _) = try await URLSession.shared.data(for: request)
             if let decodedResponse = try? JSONDecoder().decode(ResponseCar.self, from: data) {
                 carteras = decodedResponse.results.filter {$0.user?.username == username}
                 selectedCartera = carteras.filter {$0.id == id_cartera}.first
@@ -139,20 +138,22 @@ struct ProfileView: View {
                                     await getToken(user: username, pass: password)
                                 }
                             })
-                            .buttonStyle(.bordered)
-                            .foregroundColor(.white)
-                            .background(.green)
-                            .font(.footnote)
+                                .buttonStyle(.bordered)
+                                .foregroundColor(.white)
+                                .background(.green)
+                                .font(.footnote)
+                                .cornerRadius(22)
                             Spacer()
                             Button("Crear Cartera", action: {
                                 Task {
                                     await saveCartera(cartera: Cartera(id: 1, nombre: nombreCartera, capital_inicial: capitalInicial))
                                 }
                             })
-                            .buttonStyle(.bordered)
-                            .foregroundColor(.white)
-                            .background(.green)
-                            .font(.footnote)
+                                .buttonStyle(.bordered)
+                                .foregroundColor(.white)
+                                .background(.green)
+                                .font(.footnote)
+                                .cornerRadius(22)
                         }
                         
                         Form {
@@ -166,12 +167,24 @@ struct ProfileView: View {
                             .onChange(of: selectedCartera) {
                                 print("ID Cartera select: \(selectedCartera?.id ?? 0)")
                                 UserDefaults.standard.set(selectedCartera?.id, forKey: "cartera")
+                                if let encoded = try? JSONEncoder().encode(selectedCartera!) {
+                                    UserDefaults.standard.set(encoded, forKey: "carteraObjeto")
+                                }
                             }
                             HStack {
                                 Button("Cargar CVS IBKR") { isImporting.toggle() }
                                 Spacer()
                                 Image(systemName: "arrow.up.doc")
                             }
+                            NavigationLink(destination: Text("Pendiente...")) {
+                                Label("Modelo 720", systemImage: "list.clipboard.fill")
+                            }
+    //                        NavigationLink(destination: Text("Pendiente...")) {
+    //                            Label("Avanzado", systemImage: "slider.horizontal.3")
+    //                        }
+//                            NavigationLink(destination: Text("Pendiente...")) {
+//                                Label("Modo oscuro", systemImage: "paintpalette")
+//                            }
                             Section(header: Text("CAMBIA USUARIO")){
                                 HStack {
                                     Text("username")
@@ -200,17 +213,6 @@ struct ProfileView: View {
                                         .multilineTextAlignment(.trailing)
                                 }
                             }
-                        }
-                            
-                            
-                        NavigationLink(destination: Text("Pendiente...")) {
-                            Label("Modelo 720", systemImage: "list.clipboard.fill")
-                        }
-//                        NavigationLink(destination: Text("Pendiente...")) {
-//                            Label("Avanzado", systemImage: "slider.horizontal.3")
-//                        }
-                        NavigationLink(destination: Text("Pendiente...")) {
-                            Label("Modo oscuro", systemImage: "paintpalette")
                         }
                     }
                     .frame(minWidth: 0, maxWidth: .infinity)

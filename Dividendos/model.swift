@@ -117,7 +117,7 @@ struct Movimiento: Codable {
 
 }
 
-struct Empresa: Codable {
+struct Empresa: Codable, Hashable {
     let id: Int
     let nombre: String
     let logo: String
