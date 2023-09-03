@@ -21,7 +21,6 @@ struct ProfitViviendaView: View {
             let (data, result) = try await URLSession.shared.data(from: url)
             print(result)
             if let decodedResponse = try? JSONDecoder().decode(ResponseRent.self, from: data) {
-                print(decodedResponse)
                 rentas = decodedResponse.results.filter { item in
                     if (item.cartera.id == id) {
                         return true
@@ -87,7 +86,7 @@ struct ProfitViviendaView: View {
                         Image(systemName: renta.pagada ? "creditcard.circle" : "creditcard.circle.fill")
                             .foregroundColor( renta.pagada ? .green : .red)
                             .font(.system(size: 25))
-                        Text(renta.vivienda?.direccion ?? "Dividendo").font(.footnote)
+//                        Text((renta.vivienda != nil) ? "renta.vivienda?.direccion" : "Dividendo").font(.footnote) revisar esto
                     }
                 }
             }

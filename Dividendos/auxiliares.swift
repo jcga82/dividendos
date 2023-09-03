@@ -109,11 +109,12 @@ func getDesgloseDividendosMensual(dividendos: [Dividendo]) -> [DesgloseBar] {
     for i in 1...12 {
         desgloses.append(DesgloseBar(id: i, date: Calendar.current.date(from: DateComponents(month: i))!, count: getDividendosMes(mes: i, dividendos: dividendos)))
     }
-    print(desgloses)
+    //print(desgloses)
     return desgloses
 }
 
 func getDesgloseRentas(rentas: [Renta]) -> [Desglose] {
+    print("eee", rentas.count)
     var desgloses:[Desglose] = []
     let rents = rentas.reduce(0, { result, info in
         if (info.tipo == "Viviendas") {

@@ -45,6 +45,10 @@ struct DetalleEmpresaView: View {
             print("Invalid URL")
             return
         }
+        var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Token \( UserDefaults.standard.value(forKey: "token") ?? "")", forHTTPHeaderField: "Authorization")
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             if let decodedResponse = try? JSONDecoder().decode(ResponseMov.self, from: data) {
@@ -56,7 +60,7 @@ struct DetalleEmpresaView: View {
                         return false
                     }
                 }
-                print("hay \(movimientos.count) movimientos")
+                print("hay \(movimientos.count) movimientos en la cartera \(id)")
             }
         } catch {
             print("ERROR: No hay movimientos")
@@ -148,7 +152,7 @@ struct DetalleEmpresaView: View {
                 showingSheet.toggle()
             }
             .sheet(isPresented: $showingSheet) {
-                MovimientosView(movs: $movimientos, isVolver: true)
+                //MovimientosView(movs: $movimientos, isVolver: true)
             }.task {
                 await loadDataMovimientos(symbol: empresa.symbol, id: UserDefaults.standard.integer(forKey: "cartera"))
             }
@@ -193,56 +197,110 @@ struct DetalleEmpresaView: View {
 struct MovimientosView: View {
     @Binding public var movs: [Movimiento]
     var isVolver: Bool = false
+    @State var selected = 0
     @Environment(\.presentationMode) var presentationMode
     @State private var tipoSecleccionado = 0
     
+    @State private var editMode: EditMode = EditMode.inactive
+    @State var showingEditSheet = false
+    
+    var movimientosFiltratos: [Movimiento] {
+        if tipoSecleccionado == 0 {
+            return movs
+        } else if tipoSecleccionado == 1 {
+            return movs.filter { $0.tipo == "BUY" }
+        } else if tipoSecleccionado == 2 {
+            return movs.filter { $0.tipo == "SELL" }
+        } else {
+            return movs.filter { $0.tipo == "CASH IN" }
+        }
+    }
+    
+    private func deleteName(offsets: IndexSet) {
+        withAnimation {
+            offsets.sorted(by: > ).forEach { (index) in
+                print(index)
+                //movimientosFiltratos.remove(at: idx)
+            }
+        }
+    }
     
     var body: some View {
-        
-        VStack {
-            Button(isVolver ? "Volver" : "") {
-                presentationMode.wrappedValue.dismiss()
-
-            }.onAppear {
-                print(movs)
-            }
-//            Text("5 Acciones")
-//                .foregroundColor(.white)
-//                .padding()
-//                .background(.gray)
-//                .clipShape(Capsule())
-            
-            Picker("What is your favorite color?", selection: $tipoSecleccionado) {
-                            Text("Compras").tag(0)
-                            Text("Ventas").tag(1)
-            }
-            .pickerStyle(.segmented).padding(.horizontal, 40)
-        }
-        
-        List(movs, id: \.id) { mov in
-            HStack {
-                VStack {
-                    Image(systemName: mov.tipo=="BUY" ? "arrow.forward" : "arrow.backward")
-                        .foregroundColor(mov.tipo=="BUY" ? .green : .red)
-                    .font(.title)
-                    
-                    Text(getDate(fecha:mov.fecha) ?? Date(), format: Date.FormatStyle().year().month().day())
-                        .font(.footnote)
-                }
-                VStack {
+//        VStack {
+//            Button(isVolver ? "Volver" : "") {
+//                presentationMode.wrappedValue.dismiss()
+//            }.onAppear {
+//                print(movs)
+//            }
+//            Picker("", selection: $tipoSecleccionado) {
+//                Text("Todos").tag(0)
+//                Text("Compras").tag(1)
+//                Text("Ventas").tag(2)
+//            }
+//            .pickerStyle(.segmented).padding(.horizontal, 40)
+//        }
+        NavigationView {
+            List {
+                ForEach(movimientosFiltratos, id:\.id) { mov in
                     HStack {
-                        Text("\(String(format: "%.0f", mov.acciones)) acc")
-                        Text(isVolver ? "" : "@\(mov.empresa.symbol)")
+                        if editMode.isEditing {
+                            Image(systemName: "square.and.pencil")
+                                .padding(5)
+                                .onTapGesture {
+                                    showingEditSheet = true
+                                    selected = mov.id
+                                    print(selected)
+                                }
+                        }
+//                        NavigationLink(destination: AddEditMovimientoView($movimiento: mov)) {
+//                            HStack {
+//                                VStack {
+//                                    Image(systemName: mov.tipo=="BUY" ? "checkmark.circle.fill" : "rectangle.fill.badge.checkmark")
+//                                        .foregroundColor(mov.tipo=="BUY" ? .green : .red)
+//                                        .font(.title)
+//                                    
+//                                    Text(getDate(fecha:mov.fecha) ?? Date(), format: Date.FormatStyle().year().month().day())
+//                                        .font(.footnote)
+//                                }
+//                                VStack {
+//                                    HStack {
+//                                        Text("\(String(format: "%.0f", mov.acciones)) acc")
+//                                        Text(isVolver ? "" : "@\(mov.empresa.symbol)")
+//                                    }
+//                                    Text("\(String(format: "%.2f", Double(mov.precio)!))€").font(.footnote)
+//                                }
+//                                Spacer()
+//                                VStack {
+//                                    Text("\(String(format: "%.2f", getCoste(acciones: mov.acciones, precio: mov.precio)!))€").font(.footnote).bold()
+//                                        .foregroundColor(mov.tipo=="BUY" ? .green : .red)
+//                                    Text(String(format: "%.0f", mov.total_acciones)).bold()
+//                                }
+//                            }
+//                        }
                     }
-                    Text("\(String(format: "%.2f", Double(mov.precio)!))€").font(.footnote)
-                    }
-                Spacer()
-                VStack {
-                    Text("\(String(format: "%.2f", getCoste(acciones: mov.acciones, precio: mov.precio)!))€").font(.footnote).bold()
-                        .foregroundColor(mov.tipo=="BUY" ? .green : .red)
-                    Text(String(format: "%.0f", mov.total_acciones)).bold()
                 }
+                .onDelete(perform: deleteName)
             }
+            .navigationTitle("Movimientos")
+//            .navigationBarItems(trailing: NavigationLink(destination: AddEditMovimientoView()) {
+//                Image(systemName: "plus")
+//                    .resizable()
+//                    .padding(6)
+//                    .frame(width: 24, height: 24)
+//                    .background(Color.green)
+//                    .clipShape(Circle())
+//                    .foregroundColor(.white)
+//            })
+//            .navigationBarItems(trailing: EditButton()) {
+//                                Image(systemName: "plus")
+//                                    .resizable()
+//                                    .padding(6)
+//                                    .frame(width: 24, height: 24)
+//                                    .background(Color.green)
+//                                    .clipShape(Circle())
+//                                    .foregroundColor(.white)
+//                            })
+            .environment(\.editMode, $editMode)
         }
         
     }

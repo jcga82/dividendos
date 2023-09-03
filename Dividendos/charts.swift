@@ -34,9 +34,10 @@ struct ChartsView: View {
             return
         }
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
+            let (data, result) = try await URLSession.shared.data(from: url)
             if let decodedResponse = try? JSONDecoder().decode(ResponsePos.self, from: data) {
                 let all_posiciones = decodedResponse.results
+                print(result, all_posiciones.count)
                 posiciones = all_posiciones.filter { item in
                     if (item.cartera.id == id) {
                         return true
@@ -184,7 +185,9 @@ struct ChartsView: View {
                     }
                 }
                 .task {
-                    await loadDataCartera(id: UserDefaults.standard.integer(forKey: "cartera") )
+                    let id_cartera = UserDefaults.standard.integer(forKey: "cartera")
+                    print(id_cartera)
+                    await loadDataCartera(id: id_cartera)
                 }
                 .navigationTitle("Siguientes pagos")
             }

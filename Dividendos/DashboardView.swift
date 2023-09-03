@@ -28,6 +28,7 @@ struct DashboardView: View {
             let (data, _) = try await URLSession.shared.data(from: url)
             if let decodedResponse = try? JSONDecoder().decode(ResponsePos.self, from: data) {
                 let all_posiciones = decodedResponse.results
+                print("ooo", all_posiciones.count)
                 posiciones = all_posiciones.filter { item in
                     if (item.cartera.id == id) {
                         return true
@@ -35,6 +36,8 @@ struct DashboardView: View {
                         return false
                     }
                 }
+                activos = posiciones.map { $0.empresa.symbol }
+                print("activos:", activos.count)
                 print("hay \(posiciones.count) posiciones")
             }
         } catch {
@@ -48,7 +51,6 @@ struct DashboardView: View {
             return
         }
         do {
-            activos = posiciones.map { $0.empresa.symbol }
             let (data, _) = try await URLSession.shared.data(from: url)
             if let decodedResponse = try? JSONDecoder().decode([Dividendo].self, from: data) {
                 let dividendos2023 = decodedResponse.filter { activos.contains($0.empresa.symbol) && $0.payable_date.contains("2023") }
@@ -60,6 +62,7 @@ struct DashboardView: View {
                     return
                 }
                 do {
+                    print("divs", activos.count, dividendos2023.count)
                     let (data, _) = try await URLSession.shared.data(from: url2)
                     if let decodedResponse = try? JSONDecoder().decode(ResponseRent.self, from: data) {
                         rentas = decodedResponse.results.filter { item in
@@ -72,8 +75,7 @@ struct DashboardView: View {
                         print("hay \(rentas.count) rentas")
                         //Añado los dividendos
                         dividendos.map { div in
-                            let rent = Renta(id: div.id, cartera: rentas[0].cartera, tipo: "Dividendos", fecha_cobro: div.payable_date, cantidad: div.dividendo, pagada: false, vivienda: nil)
-                            rentas.append(rent)
+                            return rentas.append(Renta(id: div.id, cartera: rentas[0].cartera, tipo: "Dividendos", fecha_cobro: div.payable_date, cantidad: div.dividendo, pagada: false))
                         }
                     }
                 } catch {
@@ -168,21 +170,23 @@ struct DashboardView: View {
                 HStack {
                     VStack{
                         Text("RENTAS: \(String(format: "%.0f", getRentasTotal())) €/año").bold().font(.footnote)
-                        Chart(getDesgloseRentas(rentas: rentas), id: \.name) { data in
-                            SectorMark(
-                                angle: .value("Ventas", data.count),
-                                innerRadius: .ratio(0.55),
-                                angularInset: 2.0
-                            )
-                            .foregroundStyle(by: .value("Empresa", "\(data.name): \(String(format: "%.0f",data.count))€"))
-                            .annotation(position: .overlay) {
-                                Text("\(String(format: "%.0f", data.count*100/getRentasTotal()))%")
-                                    .font(.footnote)
-                                    .foregroundStyle(.white)
+                        if rentas.count>0 {
+                            Chart(getDesgloseRentas(rentas: rentas), id: \.name) { data in
+                                SectorMark(
+                                    angle: .value("Ventas", data.count),
+                                    innerRadius: .ratio(0.55),
+                                    angularInset: 2.0
+                                )
+                                .foregroundStyle(by: .value("Empresa", "\(data.name): \(String(format: "%.0f",data.count))€"))
+                                .annotation(position: .overlay) {
+                                    Text("\(String(format: "%.0f", data.count*100/getRentasTotal()))%")
+                                        .font(.footnote)
+                                        .foregroundStyle(.white)
+                                }
+                            }.frame(height: 200).padding()
+                            .chartBackground { proxy in
+                                Text("💰").font(.system(size: 40))
                             }
-                        }.frame(height: 200).padding()
-                        .chartBackground { proxy in
-                            Text("💰").font(.system(size: 40))
                         }
                     }
                     Spacer()
@@ -207,7 +211,7 @@ struct DashboardView: View {
                 
                 Text("RENTAS MENSUALES").font(.subheadline).bold()
                 
-                Chart(rentas) { data in
+                Chart(rentas, id: \.id) { data in
                     BarMark(x: .value("Fecha", getDateShort(fecha: data.fecha_cobro)!, unit: .month),
                             y: .value("Beneficio", data.cantidad)
                     ).foregroundStyle(by: .value("Tipo", data.tipo))
@@ -224,6 +228,11 @@ struct DashboardView: View {
                 
             }
             .task {
+                print(UserDefaults.standard.bool(forKey: "isAuthenticated"))
+                print(UserDefaults.standard.integer(forKey: "cartera"))
+                if (UserDefaults.standard.integer(forKey: "cartera") == 0){
+                    UserDefaults.standard.set(9, forKey: "cartera")
+                }
                 await loadDataCartera(id: UserDefaults.standard.integer(forKey: "cartera"))
                 await loadDataRentas(id: UserDefaults.standard.integer(forKey: "cartera"))
                 await loadDataViviendas(id: UserDefaults.standard.integer(forKey: "cartera"))

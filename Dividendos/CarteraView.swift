@@ -53,7 +53,7 @@ struct CarteraView: View {
                         return false
                     }
                 }
-                print("hay \(movimientos.count) movimientos")
+                print("hay \(movimientos.count) movimientos en cartera \(id)")
             }
         } catch {
             print("ERROR: No hay movimientos")
@@ -137,7 +137,7 @@ struct CarteraView: View {
                             Label("Mis Posiciones", systemImage: "bag.fill")
                         }
                         NavigationLink(destination: {
-                            MovimientosView(movs: $movimientos)
+                            MovimientosListView(movs: $movimientos)
                         })
                         {
                             Label("Mis Movimientos", systemImage: "folder.fill")

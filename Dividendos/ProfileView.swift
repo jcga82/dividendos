@@ -15,23 +15,104 @@ struct ProfileView: View {
     @State private var document: MessageDocument = MessageDocument(message: "Hello, World!")
     @State private var isImporting: Bool = false
     
-    func loadCarteras() async {
-        
+    @State private var username: String = ""
+    @State private var password: String = ""
+    @State var isAuthenticated: Bool = false
+    
+    @State private var nombreCartera: String = ""
+    @State private var capitalInicial: String = "0"
+    
+    func loadCarteras(username: String) async {
+        print("entro a cargar carteras de: ", username)
         let id_cartera = UserDefaults.standard.integer(forKey: "cartera")
-        
-        guard let url = URL(string: "https://hamperblock.com/django/carteras" ) else {
-            print("Invalid URL")
-            return
-        }
+        let url = URL(string: "https://hamperblock.com/django/carteras")!
+        let token = UserDefaults.standard.value(forKey: "token")
+        //print(token)
+        var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Token \( token ?? "")", forHTTPHeaderField: "Authorization")
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await URLSession.shared.data(for: request)
+            print(request, response)
             if let decodedResponse = try? JSONDecoder().decode(ResponseCar.self, from: data) {
-                carteras = decodedResponse.results
+                carteras = decodedResponse.results.filter {$0.user?.username == username}
                 selectedCartera = carteras.filter {$0.id == id_cartera}.first
             }
         } catch {
             print("ERROR: No hay carteras")
         }
+    }
+    
+    func getToken(user: String, pass: String) async {
+        print(user, pass)
+        let url = URL(string: "https://hamperblock.com/django/users/login/")!
+        let body: [String: String] = ["username": user, "password": pass]
+        let finalBody = try! JSONSerialization.data(withJSONObject: body)
+        var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.httpBody = finalBody
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            guard let data = data, error == nil else {
+                print("hay problemas de conexión con la BBDD")
+                return
+            }
+
+            let result = try? JSONDecoder().decode(LoginResponse.self, from: data)
+                    if let result = result {
+                        DispatchQueue.main.async {
+                            username = result.user.username
+                            //self.email = result.user.email
+                            UserDefaults.standard.setValue(result.access_token, forKey: "token")
+                            UserDefaults.standard.setValue(true, forKey: "isAuthenticated")
+                            isAuthenticated = true
+                            print("carteras", carteras)
+                            Task {
+                                await loadCarteras(username: user)
+                            }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            print(error as Any)
+                        }
+                    }
+                }.resume()
+    }
+    
+    func saveCartera(cartera: Cartera) {
+        let url = URL(string: "https://hamperblock.com/django/carteras/")!
+        let body = ["user": selectedCartera?.user?.id ?? 0, "nombre": cartera.nombre, "capital_inicial": cartera.capital_inicial] as [String : Any]
+        let finalBody = try! JSONSerialization.data(withJSONObject: body)
+        var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.httpBody = finalBody
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Token \( UserDefaults.standard.value(forKey: "token") ?? "")", forHTTPHeaderField: "Authorization")
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            guard let data = data, error == nil else {
+                print("hay problemas de conexión con la BBDD", error as Any)
+                return
+            }
+            let result = try? JSONDecoder().decode(Cartera.self, from: data)
+            print(result)
+                    if let result = result {
+                        DispatchQueue.main.async {
+                            Alert(title: Text("Cartera creada correctamente"), dismissButton: .default(Text("OK")))
+                            if result == nil {
+                                Alert(title: Text("La cartera tiene que tener un nombre y un capital, asi como antes entrar como usuario"))
+                            } else {
+                                Alert(title: Text("Cartera creada correctamente"), dismissButton: .default(Text("OK")))
+                            }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            print(error as Any)
+                        }
+                    }
+                }.resume()
     }
     
     var body: some View {
@@ -42,8 +123,37 @@ struct ProfileView: View {
                         Image("logo")
                             .resizable()
                             .frame(width: 50, height: 50)
-                        Text("HBLOCK50")
-                        Text("v0.1 beta").font(.footnote)
+                        Text("HBLOCK50 v0.1 beta")
+                        Divider()
+                        Text("Bienvenido \(selectedCartera?.user?.username ?? "¡Elige una Cartera o Crea una nueva")!")
+                        if selectedCartera?.user?.first_name.isEmpty == false {
+                            HStack{
+                                Text((selectedCartera?.user!.first_name)!).font(.footnote)
+                                Text((selectedCartera?.user!.last_name)!).font(.footnote)
+                            }
+                            Text((selectedCartera?.user!.email)!).font(.footnote).bold()
+                        }
+                        HStack{
+                            Button("Cambiar Usuario", action: {
+                                Task {
+                                    await getToken(user: username, pass: password)
+                                }
+                            })
+                            .buttonStyle(.bordered)
+                            .foregroundColor(.white)
+                            .background(.green)
+                            .font(.footnote)
+                            Spacer()
+                            Button("Crear Cartera", action: {
+                                Task {
+                                    await saveCartera(cartera: Cartera(id: 1, nombre: nombreCartera, capital_inicial: capitalInicial))
+                                }
+                            })
+                            .buttonStyle(.bordered)
+                            .foregroundColor(.white)
+                            .background(.green)
+                            .font(.footnote)
+                        }
                         
                         Form {
                             Picker("Cartera:", selection: $selectedCartera) {
@@ -62,28 +172,58 @@ struct ProfileView: View {
                                 Spacer()
                                 Image(systemName: "arrow.up.doc")
                             }
+                            Section(header: Text("CAMBIA USUARIO")){
+                                HStack {
+                                    Text("username")
+                                    Spacer()
+                                    TextField("", text: $username)
+                                        .multilineTextAlignment(.trailing)
+                                        .textInputAutocapitalization(.never)
+                                }
+                                HStack {
+                                    Text("password")
+                                    Spacer()
+                                    SecureField("Enter a password", text: $password).multilineTextAlignment(.trailing)
+                                }
+                            }
+                            Section(header: Text("CREAR CARTERA")){
+                                HStack {
+                                    Text("Nombre")
+                                    Spacer()
+                                    TextField("", text: $nombreCartera)
+                                        .multilineTextAlignment(.trailing)
+                                }
+                                HStack {
+                                    Text("Capital Inicial")
+                                    Spacer()
+                                    TextField("", text: $capitalInicial)
+                                        .multilineTextAlignment(.trailing)
+                                }
+                            }
                         }
+                            
+                            
                         NavigationLink(destination: Text("Pendiente...")) {
                             Label("Modelo 720", systemImage: "list.clipboard.fill")
                         }
-                        NavigationLink(destination: Text("Pendiente...")) {
-                            Label("Avanzado", systemImage: "slider.horizontal.3")
-                        }
+//                        NavigationLink(destination: Text("Pendiente...")) {
+//                            Label("Avanzado", systemImage: "slider.horizontal.3")
+//                        }
                         NavigationLink(destination: Text("Pendiente...")) {
                             Label("Modo oscuro", systemImage: "paintpalette")
                         }
                     }
                     .frame(minWidth: 0, maxWidth: .infinity)
-                    .frame(height: 350)
+                    .frame(height: 600)
                     
                 }
                 .navigationBarTitle("Opciones")
                 .navigationBarTitleDisplayMode(.inline)
             }
             .accentColor(.accentColor)
-            .task {
-                await loadCarteras()
-            }
+//            .task {
+//                await loadCarteras(username: UserDefaults.standard.string(forKey: "username") ?? "admin")
+//            }
             .fileImporter(
                 isPresented: $isImporting,
                 allowedContentTypes: [.plainText],
