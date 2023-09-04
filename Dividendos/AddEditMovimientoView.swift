@@ -12,8 +12,8 @@ struct AddEditMovimientoView: View {
     @Environment (\.presentationMode) var presentationMode
     @State var movimiento: Movimiento// = Movimiento(id: 1, tipo: "", acciones: 0, total_acciones: 0, precio: "", moneda: "", cartera: Cartera(id: 0, nombre: "", capital_inicial: ""), comision: "", cambio_moneda: "", fecha: "")
     @State private var isEditing = true
-    @StateObject var viewModel: ViewModel = ViewModel()
-    @State private var selectedEmpresa:Empresa?
+    @State var empresas: [Empresa] = [Empresa]()
+    @State var selectedEmpresa:Empresa?
     
     @State private var fecha = Date.now
     @State var quantity: Int = 1
@@ -64,6 +64,19 @@ struct AddEditMovimientoView: View {
             return formatter
     }()
     
+    func loadDataEmpresas() async {
+        let url = URL(string: "https://hamperblock.com/django/empresas/")!
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let decodedResponse = try? JSONDecoder().decode([Empresa].self, from: data) {
+                empresas = decodedResponse
+                print("hay \(empresas.count) empresas")
+            }
+        } catch {
+            print("ERROR: No hay contratos")
+        }
+    }
+    
 //    func getCarterasObjetc() -> Cartera {
 //        if let carteraObj = UserDefaults.standard.object(forKey: "carteraObjeto") as? Data {
 //            let decoder = JSONDecoder()
@@ -79,16 +92,14 @@ struct AddEditMovimientoView: View {
             Form {
                 if movimiento.acciones == 0 {
                     Picker("Empresa:", selection: $selectedEmpresa) {
-                        ForEach(viewModel.empresas, id: \.self) { empresa in
+                        ForEach(empresas, id: \.symbol) { empresa in
                             Text(empresa.symbol).tag(empresa as Empresa?)
                         }
                     }.pickerStyle(.wheel)
                         .onChange(of: selectedEmpresa) {
                             print("ID Empresa select: \(selectedEmpresa?.id ?? 0)")
+                            print(empresas.count, selectedEmpresa!)
                             //selectedEmpresa = selectedEmpresa
-                        }
-                        .onAppear{
-                            viewModel.executeAPI()
                         }
                     
                     Section(header: Text("Customer Information")) {
@@ -115,7 +126,7 @@ struct AddEditMovimientoView: View {
                         Button(action: {
                             print("Guardando...", movimiento)
                             //if selectedEmpresa!.id>0 {
-                                saveMovimiento(movimiento: Movimiento(id: 1, tipo: "BUY", acciones: Double(quantity), total_acciones: Double(quantity), precio: "1", moneda: "USD", empresa: viewModel.empresas[0], cartera: carteraObjeto, comision: "0", cambio_moneda: "1", fecha: DateFormatter().string(from: fecha)))
+                            saveMovimiento(movimiento: Movimiento(id: 1, tipo: "BUY", acciones: Double(quantity), total_acciones: Double(quantity), precio: "1", moneda: "USD", empresa: selectedEmpresa!, cartera: carteraObjeto, comision: "0", cambio_moneda: "1", fecha: DateFormatter().string(from: fecha)))
                             //}
                         }, label: {
                             HStack {
@@ -164,9 +175,12 @@ struct AddEditMovimientoView: View {
                 Button(isEditing ? "Done" : "Edit") {
                     isEditing.toggle()
                 }
-            }.onAppear{
-                viewModel.executeAPI()
             }
+//            .onAppear{
+//                viewModel.executeAPI()
+//            }
+        }.task {
+            await loadDataEmpresas()
         }
     }
 }
