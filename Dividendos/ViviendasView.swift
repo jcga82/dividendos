@@ -273,7 +273,7 @@ struct ViviendaView: View {
                         HStack{
                             Text("% Financiado")
                             Spacer()
-                            Text("\(String(format: "%.0f",vivienda.pct_finan!*100))%")
+                            Text("\(String(format: "%.0f",vivienda.pct_finan!))%")
                             Slider(value: $volumeSliderValue, in: 0...1, step: 0.01)
                                 .accentColor(Color.green)
                         }
@@ -281,7 +281,7 @@ struct ViviendaView: View {
                             Text("Plazo (años)")
                             Spacer()
 //                            Text("\(String(format: "%.0f",vivienda.plazo!)) años")
-                            Slider(value: $plazoSliderValue, in: 0...1, step: 0.01)
+                            Slider(value: $plazoSliderValue, in: 0...50, step: 1)
                                 .accentColor(Color.green)
                                 .padding(.top)
                                                 .overlay(GeometryReader { gp in
@@ -293,7 +293,7 @@ struct ViviendaView: View {
                                                 }, alignment: .top)
                         }
                         HStack{
-                            Text("Interés")
+                            Text("Interés variable")
                             Spacer()
                             Text("\(String(format: "%.2f",vivienda.interes!))%")
                         }

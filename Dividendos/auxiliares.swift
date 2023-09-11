@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 func getDate(fecha: String) -> Date? {
     let dateFormatter = DateFormatter()
@@ -13,10 +14,28 @@ func getDate(fecha: String) -> Date? {
     return dateFormatter.date(from: fecha)
 }
 
+func getDateBinding(fecha: String) -> Binding<Date>? {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss+02:00"
+    return Binding(get: {dateFormatter.date(from: fecha)!},
+                   set: {_ in dateFormatter.date(from: fecha)
+                    })
+}
+
+func getStringFromBinding(dato: Binding<Double>) -> String? {
+    return String("\(dato.wrappedValue)")
+}
+
 func getDateShort(fecha: String) -> Date? {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd"
     return dateFormatter.date(from: fecha)
+}
+
+func convertDateToString(date: Date) -> String? {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss+02:00"
+    return dateFormatter.string(from: date)
 }
 
 func getCoste(acciones: Double, precio: String) -> Double? {

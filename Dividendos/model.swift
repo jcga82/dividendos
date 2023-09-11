@@ -7,6 +7,11 @@
 
 import Foundation
 
+struct Request: Codable {
+    let status: String
+    let data: String
+}
+
 struct LoginResponse: Codable {
     let access_token: String
     let user: UserShor
