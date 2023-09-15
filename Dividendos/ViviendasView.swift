@@ -134,6 +134,9 @@ struct ViviendasView: View {
                         NavigationLink(destination: ContratosView()){
                             Label("Contratos", systemImage: "doc.badge.clock.fill")
                         }
+                        NavigationLink(destination: ViviendasListView()){
+                            Label("Viviendas", systemImage: "house.fill")
+                        }
                     })
                     Section(header: Text("VIVIENDAS"), content: {
                         ForEach(viviendas, id: \.self) { vivienda in
@@ -146,7 +149,7 @@ struct ViviendasView: View {
                         }
                     })
                 }
-                .navigationBarTitle("Viviendas")
+                .navigationBarTitle("Rentas Viviendas")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarHidden(false)
             }

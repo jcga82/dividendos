@@ -14,6 +14,8 @@
 		7DA58E622AA2755D009BD943 /* EmpresasListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA58E612AA2755D009BD943 /* EmpresasListView.swift */; };
 		7DA58E642AA36DD5009BD943 /* AddEditMovimientoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA58E632AA36DD5009BD943 /* AddEditMovimientoView.swift */; };
 		7DA58E662AA38C64009BD943 /* MovimientosListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA58E652AA38C64009BD943 /* MovimientosListView.swift */; };
+		7DA58E682AAF8C5F009BD943 /* ViviendasListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA58E672AAF8C5F009BD943 /* ViviendasListView.swift */; };
+		7DA58E6A2AAF8F52009BD943 /* AddEditViviendaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA58E692AAF8F52009BD943 /* AddEditViviendaView.swift */; };
 		7DE35DC62A83E4E60044F57D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7DE35DBD2A83E4E60044F57D /* Assets.xcassets */; };
 		7DE35DC72A83E4E60044F57D /* services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE35DBE2A83E4E60044F57D /* services.swift */; };
 		7DE35DC82A83E4E60044F57D /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE35DBF2A83E4E60044F57D /* HeaderView.swift */; };
@@ -49,6 +51,8 @@
 		7DA58E612AA2755D009BD943 /* EmpresasListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmpresasListView.swift; sourceTree = "<group>"; };
 		7DA58E632AA36DD5009BD943 /* AddEditMovimientoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditMovimientoView.swift; sourceTree = "<group>"; };
 		7DA58E652AA38C64009BD943 /* MovimientosListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovimientosListView.swift; sourceTree = "<group>"; };
+		7DA58E672AAF8C5F009BD943 /* ViviendasListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViviendasListView.swift; sourceTree = "<group>"; };
+		7DA58E692AAF8F52009BD943 /* AddEditViviendaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditViviendaView.swift; sourceTree = "<group>"; };
 		7DE35DBD2A83E4E60044F57D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Dividendos/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		7DE35DBE2A83E4E60044F57D /* services.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = services.swift; path = Dividendos/services.swift; sourceTree = SOURCE_ROOT; };
 		7DE35DBF2A83E4E60044F57D /* HeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HeaderView.swift; path = Dividendos/HeaderView.swift; sourceTree = SOURCE_ROOT; };
@@ -121,6 +125,8 @@
 				7DE35DE32A92708F0044F57D /* ProfitView.swift */,
 				7DA58E5B2A9BA1D1009BD943 /* ProfitViviendasView.swift */,
 				7DE35DE52A9907000044F57D /* ViviendasView.swift */,
+				7DA58E672AAF8C5F009BD943 /* ViviendasListView.swift */,
+				7DA58E692AAF8F52009BD943 /* AddEditViviendaView.swift */,
 				7DA58E5D2A9BB52E009BD943 /* ContratosView.swift */,
 				7DE35DCF2A83E5080044F57D /* charts.swift */,
 				7DE35DDA2A868C5E0044F57D /* CarteraView.swift */,
@@ -240,6 +246,7 @@
 				7DE35DD02A83E5080044F57D /* charts.swift in Sources */,
 				7DE35DC72A83E4E60044F57D /* services.swift in Sources */,
 				B80C480C2A402D180047AAC0 /* ContentView.swift in Sources */,
+				7DA58E6A2AAF8F52009BD943 /* AddEditViviendaView.swift in Sources */,
 				7DE35DD62A83E53A0044F57D /* model.swift in Sources */,
 				7DE35DD42A83E52C0044F57D /* HeaderView.swift in Sources */,
 				7DA58E5E2A9BB52E009BD943 /* ContratosView.swift in Sources */,
@@ -248,6 +255,7 @@
 				B80C480A2A402D180047AAC0 /* DividendosApp.swift in Sources */,
 				7DE35DCE2A83E4E60044F57D /* charts.swift in Sources */,
 				7DA58E662AA38C64009BD943 /* MovimientosListView.swift in Sources */,
+				7DA58E682AAF8C5F009BD943 /* ViviendasListView.swift in Sources */,
 				7DA58E602AA2750C009BD943 /* ComponentsView.swift in Sources */,
 				7DE35DD82A83E5410044F57D /* services.swift in Sources */,
 				7DE35DDF2A8B653E0044F57D /* PieChartView.swift in Sources */,

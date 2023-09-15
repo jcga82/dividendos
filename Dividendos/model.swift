@@ -202,35 +202,35 @@ struct Vivienda: Codable, Hashable {
     let cuota_hipoteca_mes: Double?
     let cash_flow: Double?
     let roce: Double?
-//    
-//    init(id: Int, cartera: Cartera, tipo: String, direccion: String, comunidad: String, valor_cv: Double, gastos_cv: Double, gastos_reforma: Double, ingresos_mensuales: Double, gastos_ibi: Double, gastos_seguros: Double, gastos_comunidad: Double, financiacion: Bool, pct_finan: Double?, plazo: Double?, interes: Double?, itp: Double?, total_compra: Double?, gastos_anuales: Double?, rent_bruta: Double?, rent_neta: Double?, valor_hipoteca: Double?, capital_aportar: Double?, cuota_hipoteca_mes: Double?, cash_flow: Double?, roce: Double?) {
-//        self.id = id
-//        self.cartera = cartera
-//        self.tipo = tipo
-//        self.direccion = direccion
-//        self.comunidad = comunidad
-//        self.valor_cv = valor_cv
-//        self.gastos_cv = gastos_cv
-//        self.gastos_reforma = gastos_reforma
-//        self.ingresos_mensuales = ingresos_mensuales
-//        self.gastos_ibi = gastos_ibi
-//        self.gastos_seguros = gastos_seguros
-//        self.gastos_comunidad = gastos_comunidad
-//        self.financiacion = financiacion
-//        self.pct_finan = pct_finan
-//        self.plazo = plazo
-//        self.interes = interes
-//        self.itp = itp
-//        self.total_compra = total_compra
-//        self.gastos_anuales = gastos_anuales
-//        self.rent_bruta = rent_bruta
-//        self.rent_neta = rent_neta
-//        self.valor_hipoteca = valor_hipoteca
-//        self.capital_aportar = capital_aportar
-//        self.cuota_hipoteca_mes = cuota_hipoteca_mes
-//        self.cash_flow = cash_flow
-//        self.roce = roce
-//    }
+    
+    init(id: Int, cartera: Cartera, tipo: String, direccion: String, comunidad: String, valor_cv: Double, gastos_cv: Double, gastos_reforma: Double, ingresos_mensuales: Double, gastos_ibi: Double, gastos_seguros: Double, gastos_comunidad: Double, financiacion: Bool, pct_finan: Double?, plazo: Double?, interes: Double?, itp: Double?, total_compra: Double?, gastos_anuales: Double?, rent_bruta: Double?, rent_neta: Double?, valor_hipoteca: Double?, capital_aportar: Double?, cuota_hipoteca_mes: Double?, cash_flow: Double?, roce: Double?) {
+        self.id = id
+        self.cartera = cartera
+        self.tipo = tipo
+        self.direccion = direccion
+        self.comunidad = comunidad
+        self.valor_cv = valor_cv
+        self.gastos_cv = gastos_cv
+        self.gastos_reforma = gastos_reforma
+        self.ingresos_mensuales = ingresos_mensuales
+        self.gastos_ibi = gastos_ibi
+        self.gastos_seguros = gastos_seguros
+        self.gastos_comunidad = gastos_comunidad
+        self.financiacion = financiacion
+        self.pct_finan = pct_finan
+        self.plazo = plazo
+        self.interes = interes
+        self.itp = itp
+        self.total_compra = total_compra
+        self.gastos_anuales = gastos_anuales
+        self.rent_bruta = rent_bruta
+        self.rent_neta = rent_neta
+        self.valor_hipoteca = valor_hipoteca
+        self.capital_aportar = capital_aportar
+        self.cuota_hipoteca_mes = cuota_hipoteca_mes
+        self.cash_flow = cash_flow
+        self.roce = roce
+    }
     
 }
 
