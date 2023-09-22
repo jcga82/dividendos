@@ -40,6 +40,7 @@
 		B80C480C2A402D180047AAC0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80C480B2A402D180047AAC0 /* ContentView.swift */; };
 		B80C480E2A402D1A0047AAC0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B80C480D2A402D1A0047AAC0 /* Assets.xcassets */; };
 		B80C48112A402D1A0047AAC0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B80C48102A402D1A0047AAC0 /* Preview Assets.xcassets */; };
+		B81ECC832ABDAAF3009A01CC /* HistoricoDividendosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81ECC822ABDAAF3009A01CC /* HistoricoDividendosView.swift */; };
 		B83BF8C32A9CB88D00BBED45 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83BF8C22A9CB88D00BBED45 /* DashboardView.swift */; };
 /* End PBXBuildFile section */
 
@@ -78,6 +79,7 @@
 		B80C480B2A402D180047AAC0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B80C480D2A402D1A0047AAC0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B80C48102A402D1A0047AAC0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		B81ECC822ABDAAF3009A01CC /* HistoricoDividendosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricoDividendosView.swift; sourceTree = "<group>"; };
 		B83BF8C22A9CB88D00BBED45 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -117,6 +119,7 @@
 				B80C480B2A402D180047AAC0 /* ContentView.swift */,
 				7DA58E612AA2755D009BD943 /* EmpresasListView.swift */,
 				7DE35DD12A83E5240044F57D /* DetalleEmpresaView.swift */,
+				B81ECC822ABDAAF3009A01CC /* HistoricoDividendosView.swift */,
 				7DA58E652AA38C64009BD943 /* MovimientosListView.swift */,
 				7DA58E632AA36DD5009BD943 /* AddEditMovimientoView.swift */,
 				B83BF8C22A9CB88D00BBED45 /* DashboardView.swift */,
@@ -258,6 +261,7 @@
 				7DA58E682AAF8C5F009BD943 /* ViviendasListView.swift in Sources */,
 				7DA58E602AA2750C009BD943 /* ComponentsView.swift in Sources */,
 				7DE35DD82A83E5410044F57D /* services.swift in Sources */,
+				B81ECC832ABDAAF3009A01CC /* HistoricoDividendosView.swift in Sources */,
 				7DE35DDF2A8B653E0044F57D /* PieChartView.swift in Sources */,
 				7DE35DD22A83E5240044F57D /* DetalleEmpresaView.swift in Sources */,
 				B83BF8C32A9CB88D00BBED45 /* DashboardView.swift in Sources */,

@@ -62,10 +62,6 @@ struct ResponseRent: Codable {
     var results: [Renta]
 }
 
-//struct ResponseCont: Codable {
-//    var results: [Contrato]
-//}
-
 struct Result: Codable {
     var id: Int
     var captura: String

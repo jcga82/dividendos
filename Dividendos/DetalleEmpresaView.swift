@@ -19,6 +19,7 @@ struct Message: Decodable, Identifiable {
 struct DetalleEmpresaView: View {
     @State private var results = [Result]()
     @State var movimientos = [Movimiento]()
+    @State var dividendos = [Dividendo]()
     var empresa: Empresa
     @State private var showingSheet = false
     @Environment(\.presentationMode) var presentationMode
@@ -64,6 +65,23 @@ struct DetalleEmpresaView: View {
             }
         } catch {
             print("ERROR: No hay movimientos")
+        }
+    }
+    
+    func loadHistoricoDividendos(symbol: String) async {
+        let url = URL(string: "https://hamperblock.com/django/dividendos/?symbol=" + symbol )!
+        var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Token \( UserDefaults.standard.value(forKey: "token") ?? "")", forHTTPHeaderField: "Authorization")
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let decodedResponse = try? JSONDecoder().decode([Dividendo].self, from: data) {
+                dividendos = decodedResponse
+                print("hay \(dividendos.count) dividendos")
+            }
+        } catch {
+            print("ERROR: No hay dividendos")
         }
     }
     
@@ -148,13 +166,21 @@ struct DetalleEmpresaView: View {
                 
             }.padding(.horizontal, 25)
             
-            Button("Movimientos") {
+//            Button("Movimientos") {
+//                showingSheet.toggle()
+//            }
+//            .sheet(isPresented: $showingSheet) {
+//                //MovimientosView(movs: $movimientos, isVolver: true)
+//            }.task {
+//                await loadDataMovimientos(symbol: empresa.symbol, id: UserDefaults.standard.integer(forKey: "cartera"))
+//            }
+            Button("Histórico Dividendos") {
                 showingSheet.toggle()
             }
             .sheet(isPresented: $showingSheet) {
-                //MovimientosView(movs: $movimientos, isVolver: true)
+                HistoricoDividendosView(dividendos: $dividendos)
             }.task {
-                await loadDataMovimientos(symbol: empresa.symbol, id: UserDefaults.standard.integer(forKey: "cartera"))
+                await loadHistoricoDividendos(symbol: empresa.symbol)
             }
                 
             NavigationView {

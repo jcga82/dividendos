@@ -32,6 +32,12 @@ func getDateShort(fecha: String) -> Date? {
     return dateFormatter.date(from: fecha)
 }
 
+func getDateOnlyYear(fecha: String) -> Date? {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy"
+    return dateFormatter.date(from: fecha)
+}
+
 func convertDateToString(date: Date) -> String? {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss+02:00"
