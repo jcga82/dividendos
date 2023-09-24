@@ -21,6 +21,8 @@ struct ProfileView: View {
     
     @State private var nombreCartera: String = ""
     @State private var capitalInicial: String = "0"
+    @State private var showAlert = false
+
     
     func loadCarteras(username: String) async {
         print("entro a cargar carteras de: ", username)
@@ -71,6 +73,35 @@ struct ProfileView: View {
                             Task {
                                 await loadCarteras(username: user)
                             }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            print(error as Any)
+                        }
+                    }
+                }.resume()
+    }
+    
+    func deleteUser(user: String) async {
+        let url = URL(string: "https://hamperblock.com/django/users/delete")!
+        let body: [String: String] = ["username": user]
+        let finalBody = try! JSONSerialization.data(withJSONObject: body)
+        var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.httpBody = finalBody
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            guard let data = data, error == nil else {
+                print("hay problemas de conexión con la BBDD")
+                return
+            }
+            print("aqui")
+            let result = try? JSONDecoder().decode(Request.self, from: data)
+            print(result as Any)
+                    if let result = result {
+                        DispatchQueue.main.async {
+                            print(result)
                         }
                     } else {
                         DispatchQueue.main.async {
@@ -144,14 +175,18 @@ struct ProfileView: View {
                                 .font(.footnote)
                                 .cornerRadius(22)
                             Spacer()
-                            Button("Crear Cartera", action: {
+                            Button("Eliminar Usuario", action: {
+                                showAlert = true
                                 Task {
-                                    await saveCartera(cartera: Cartera(id: 1, nombre: nombreCartera, capital_inicial: capitalInicial))
+                                    await deleteUser(user: username)
                                 }
                             })
+                            .alert("Usuario borrado", isPresented: $showAlert) {
+                                        Button("OK") { }
+                                    }
                                 .buttonStyle(.bordered)
                                 .foregroundColor(.white)
-                                .background(.green)
+                                .background(.red)
                                 .font(.footnote)
                                 .cornerRadius(22)
                         }
@@ -212,6 +247,16 @@ struct ProfileView: View {
                                     TextField("", text: $capitalInicial)
                                         .multilineTextAlignment(.trailing)
                                 }
+                                Button("Crear Cartera", action: {
+                                    Task {
+                                        await saveCartera(cartera: Cartera(id: 1, nombre: nombreCartera, capital_inicial: capitalInicial))
+                                    }
+                                })
+                                    .buttonStyle(.bordered)
+                                    .foregroundColor(.white)
+                                    .background(.green)
+                                    .font(.footnote)
+                                    .cornerRadius(22)
                             }
                         }
                     }
