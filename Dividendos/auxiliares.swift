@@ -122,6 +122,26 @@ func getActivosInmo(viviendas: [Vivienda]) -> [Desglose] {
     return desgloses
 }
 
+func getDividendosAnuales(dividendos: [Dividendo], year: Int) -> Double {
+    dividendos.reduce(0, {
+        let year = DateComponents(year: Int(year))
+        print(Calendar.current.dateComponents([.year], from: getDateShort(fecha: $1.payable_date)!) == year ? $0 + $1.dividendo : $0)
+        return Calendar.current.dateComponents([.year], from: getDateShort(fecha: $1.payable_date)!) == year ? $0 + $1.dividendo : $0
+    })
+}
+
+func getDesgloseDividendosAnual(dividendos: [Dividendo]) -> [DesgloseBar] {
+    var desgloses:[DesgloseBar] = []
+    let years = Set(dividendos.map{$0.date.prefix(4)})
+    print(years)
+    
+    for y in years {
+        desgloses.append(DesgloseBar(id: Int(y)!, date: Calendar.current.date(from: DateComponents(year: Int(y)))!, count: getDividendosAnuales(dividendos: dividendos, year: Int(y)!)))
+    }
+    print("aqui", desgloses)
+    return desgloses
+}
+
 func getDividendosMes(mes: Int, dividendos: [Dividendo]) -> Double {
     let yearMonth = DateComponents(month: mes)
     return dividendos.reduce(0, {

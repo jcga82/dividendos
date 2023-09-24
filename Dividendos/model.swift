@@ -149,7 +149,7 @@ struct Profit: Codable, Identifiable {
     let aportado_total: Double
 }
 
-struct Dividendo: Codable, Identifiable {
+struct Dividendo: Codable, Identifiable, Hashable {
     let id: Int
     let date: String
     let dividendo: Double
