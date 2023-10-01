@@ -28,7 +28,7 @@ struct DashboardView: View {
             let (data, _) = try await URLSession.shared.data(from: url)
             if let decodedResponse = try? JSONDecoder().decode(ResponsePos.self, from: data) {
                 let all_posiciones = decodedResponse.results
-                print("ooo", all_posiciones.count)
+                print("total carteras y mi id cartera actual", all_posiciones.count, id)
                 posiciones = all_posiciones.filter { item in
                     if (item.cartera.id == id) {
                         return true
@@ -163,6 +163,8 @@ struct DashboardView: View {
     
     var body: some View {
         
+        @State var speed = 50.0
+        
         NavigationView {
             VStack() {
                 Text("RENTAS PASIVAS").font(.title)
@@ -199,12 +201,18 @@ struct DashboardView: View {
                         Text("Valor: \(String(format: "%.0f", getPatrimonioViviendas())) €").foregroundColor(.blue).font(.footnote)
                         Text("Deuda: \(String(format: "%.0f", getDeudaViviendas())) €").foregroundColor(.blue).font(.footnote)
                         Divider()
-                        Text("Patrim. \( String(format: "%.0f", getProfitsBolsa() + getPatrimonioViviendas() )) €").bold().font(.footnote)
                         HStack{
                             Image(systemName: "flag.checkered")
-                            Text("100.000 €").font(.footnote)
+                            Text("Patrim.\( String(format: "%.0f", (getProfitsBolsa() + getPatrimonioViviendas()) )) €").bold().font(.footnote)
                         }
-                    }.padding(20)
+                        Gauge(value:speed, in: 0...100){
+                            Text("Obj.").font(.footnote)
+                        } currentValueLabel: {
+                            Text("\( String(format: "%.0f", (getProfitsBolsa() + getPatrimonioViviendas())*100/500000  )) %").bold().font(.body)
+                        } .gaugeStyle(.accessoryCircular)
+                            .tint(.green)
+                        
+                    }.padding(10)
                 }.padding()
                 
                 

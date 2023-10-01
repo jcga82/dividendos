@@ -13,14 +13,15 @@ struct Request: Codable {
 }
 
 struct LoginResponse: Codable {
-    let access_token: String
-    let user: UserShor
+    var access_token: String
+    var user: UserShor
 }
 
 struct UserShor: Codable {
-    let username: String
-    let email: String
-    //let groups
+    var id: Int
+    var username: String
+    var email: String
+//    let groups: [Any]
 }
 
 struct Desglose {
@@ -79,14 +80,14 @@ struct Cartera: Codable, Hashable {
 }
 
 struct User: Codable, Hashable {
-    let id: Int
-//    let password: String
+    var id: Int
+    var password: String
 //    let last_login: String
 //    let is_superuser: Bool
-    let username: String
-    let first_name: String
-    let last_name: String
-    let email: String
+    var username: String
+    var first_name: String
+    var last_name: String
+    var email: String
 //    let is_staff: Bool
 //    let is_active: Bool
 //    let date_joined: String
@@ -111,7 +112,7 @@ struct Movimiento: Codable {
     var precio: String
     var moneda: String
     var empresa: Empresa?
-    var cartera: Cartera
+    var cartera: Int
     var comision: String
     var cambio_moneda: String
     var fecha: String

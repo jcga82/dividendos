@@ -47,7 +47,7 @@ struct CarteraView: View {
             if let decodedResponse = try? JSONDecoder().decode(ResponseMov.self, from: data) {
                 let all_movimientos = decodedResponse.results
                 movimientos = all_movimientos.filter { item in
-                    if (item.cartera.id == id) {
+                    if (item.cartera == id) {
                         return true
                     } else {
                         return false

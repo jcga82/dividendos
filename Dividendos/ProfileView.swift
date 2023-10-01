@@ -18,9 +18,14 @@ struct ProfileView: View {
     @State private var username: String = ""
     @State private var password: String = ""
     @State var isAuthenticated: Bool = false
+    @State var userId = 1
+    @State var newUser = User(id: 0, password: "", username: "username", first_name: "Nombre", last_name: "Apellidos", email: "algo@gmail.com")
+    @State private var showingAlertNewUser = false
     
     @State private var nombreCartera: String = ""
     @State private var capitalInicial: String = "0"
+    @State private var showingAlertNewCartera = false
+    
     @State private var showAlert = false
 
     
@@ -64,8 +69,11 @@ struct ProfileView: View {
             let result = try? JSONDecoder().decode(LoginResponse.self, from: data)
                     if let result = result {
                         DispatchQueue.main.async {
+                            print(result.user)
+                            userId = result.user.id
                             username = result.user.username
                             //self.email = result.user.email
+                            UserDefaults.standard.setValue(result.user.id, forKey: "userId")
                             UserDefaults.standard.setValue(result.access_token, forKey: "token")
                             UserDefaults.standard.setValue(true, forKey: "isAuthenticated")
                             isAuthenticated = true
@@ -73,6 +81,35 @@ struct ProfileView: View {
                             Task {
                                 await loadCarteras(username: user)
                             }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            print(error as Any)
+                        }
+                    }
+                }.resume()
+    }
+    
+    func register(user: User) async {
+        let url = URL(string: "https://hamperblock.com/django/users/signup/")!
+        let body: [String: String] = ["username": user.username, "password": user.password, "password_confirmation": user.password, "email": user.email, "first_name": user.first_name, "last_name": user.last_name]
+        let finalBody = try! JSONSerialization.data(withJSONObject: body)
+        var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.httpBody = finalBody
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            guard let data = data, error == nil else {
+                print("hay problemas de conexión con la BBDD")
+                return
+            }
+
+            let result = try? JSONDecoder().decode(UserShor.self, from: data)
+                    if let result = result {
+                        DispatchQueue.main.async {
+                            showingAlertNewUser = true
+                            print("User creado correctamente")
                         }
                     } else {
                         DispatchQueue.main.async {
@@ -113,7 +150,7 @@ struct ProfileView: View {
     
     func saveCartera(cartera: Cartera) {
         let url = URL(string: "https://hamperblock.com/django/carteras/")!
-        let body = ["user": selectedCartera?.user?.id ?? 0, "nombre": cartera.nombre, "capital_inicial": cartera.capital_inicial] as [String : Any]
+        let body = ["user": UserDefaults.standard.integer(forKey: "userId"), "nombre": cartera.nombre, "capital_inicial": cartera.capital_inicial] as [String : Any]
         let finalBody = try! JSONSerialization.data(withJSONObject: body)
         var request = URLRequest(url: url)
             request.httpMethod = "POST"
@@ -130,12 +167,10 @@ struct ProfileView: View {
             print(result)
                     if let result = result {
                         DispatchQueue.main.async {
-                            Alert(title: Text("Cartera creada correctamente"), dismissButton: .default(Text("OK")))
-                            if result == nil {
-                                Alert(title: Text("La cartera tiene que tener un nombre y un capital, asi como antes entrar como usuario"))
-                            } else {
-                                Alert(title: Text("Cartera creada correctamente"), dismissButton: .default(Text("OK")))
-                            }
+                            showingAlertNewCartera = true
+//                            if result == nil {
+//                                Alert(title: Text("La cartera tiene que tener un nombre y un capital, asi como antes entrar como usuario"))
+//                            }
                         }
                     } else {
                         DispatchQueue.main.async {
@@ -206,17 +241,20 @@ struct ProfileView: View {
                                     UserDefaults.standard.set(encoded, forKey: "carteraObjeto")
                                 }
                             }
-                            HStack {
-                                Button("Cargar CVS IBKR") { isImporting.toggle() }
-                                Spacer()
-                                Image(systemName: "arrow.up.doc")
-                            }
-                            NavigationLink(destination: Text("Pendiente...")) {
-                                Label("Modelo 720", systemImage: "list.clipboard.fill")
-                            }
-    //                        NavigationLink(destination: Text("Pendiente...")) {
-    //                            Label("Avanzado", systemImage: "slider.horizontal.3")
-    //                        }
+//                            HStack {
+//                                Button("Cargar CVS IBKR") { isImporting.toggle() }
+//                                Spacer()
+//                                Image(systemName: "arrow.up.doc")
+//                            }
+//                            NavigationLink(destination: Text("Pendiente...")) {
+//                                Label("Crear usuario", systemImage: "user")
+//                            }
+//                            NavigationLink(destination: Text("Pendiente...")) {
+//                                Label("Modelo 720", systemImage: "list.clipboard.fill")
+//                            }
+//                            NavigationLink(destination: Text("Pendiente...")) {
+//                                Label("Avanzado", systemImage: "slider.horizontal.3")
+//                            }
 //                            NavigationLink(destination: Text("Pendiente...")) {
 //                                Label("Modo oscuro", systemImage: "paintpalette")
 //                            }
@@ -252,7 +290,51 @@ struct ProfileView: View {
                                         await saveCartera(cartera: Cartera(id: 1, nombre: nombreCartera, capital_inicial: capitalInicial))
                                     }
                                 })
+                                .alert(isPresented: $showingAlertNewUser) {
+                                    Alert(title: Text("Cartera creada correctamente"), dismissButton: .default(Text("OK")))
+                                }
                                     .buttonStyle(.bordered)
+                                    .frame(maxWidth: .infinity)
+                                    .foregroundColor(.white)
+                                    .background(.green)
+                                    .font(.footnote)
+                                    .cornerRadius(22)
+                            }
+                            Section(header: Text("CREAR NUEVO USUARIO")){
+                                HStack {
+                                    Text("Usuario")
+                                    Spacer()
+                                    TextField("Username", text: $newUser.username)
+                                        .multilineTextAlignment(.trailing)
+                                        .textInputAutocapitalization(.never)
+                                }
+                                HStack {
+                                    Text("Password")
+                                    Spacer()
+                                    SecureField("Password", text: $newUser.password)
+                                        .multilineTextAlignment(.trailing)
+                                }
+                                HStack {
+                                    Text("Email")
+                                    Spacer()
+                                    TextField("Email", text: $newUser.email)
+                                        .multilineTextAlignment(.trailing)
+                                        .textInputAutocapitalization(.never)
+                                }
+                                Button("Crear Usuario", action: {
+                                    Task {
+                                        print(newUser)
+                                        await register(user: newUser)
+                                    }
+                                })
+                                    .alert(isPresented: $showingAlertNewUser) {
+                                        Alert(title: Text("Usuario"),
+                                              message: Text("User creado correctamente"),
+                                              dismissButton: .default(Text("OK"))
+                                        )
+                                    }
+                                    .buttonStyle(.bordered)
+                                    .frame(maxWidth: .infinity)
                                     .foregroundColor(.white)
                                     .background(.green)
                                     .font(.footnote)
@@ -271,20 +353,21 @@ struct ProfileView: View {
 //            .task {
 //                await loadCarteras(username: UserDefaults.standard.string(forKey: "username") ?? "admin")
 //            }
-            .fileImporter(
-                isPresented: $isImporting,
-                allowedContentTypes: [.plainText],
-                allowsMultipleSelection: false
-            ) { result in
-                do {
-                    guard let selectedFile: URL = try result.get().first else { return }
-                    guard let message = String(data: try Data(contentsOf: selectedFile), encoding: .utf8) else { return }
-                    
-                    document.message = message
-                } catch {
-                    // Handle failure.
-                }
-            }
+            
+//            .fileImporter(
+//                isPresented: $isImporting,
+//                allowedContentTypes: [.plainText],
+//                allowsMultipleSelection: false
+//            ) { result in
+//                do {
+//                    guard let selectedFile: URL = try result.get().first else { return }
+//                    guard let message = String(data: try Data(contentsOf: selectedFile), encoding: .utf8) else { return }
+//                    
+//                    document.message = message
+//                } catch {
+//                    // Handle failure.
+//                }
+//            }
         }
     }
     

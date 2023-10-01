@@ -12,8 +12,13 @@ import Charts
 struct HistoricoDividendosView: View {
     
     @Binding var dividendos: [Dividendo]
+    @Environment (\.presentationMode) var presentationMode
     
     var body: some View {
+        Button("Volver", action: {
+            self.presentationMode.wrappedValue.dismiss()
+        })
+        
         Chart(getDesgloseDividendosAnual(dividendos: dividendos)) { data in
             BarMark(x: .value("Fecha", data.date, unit: .year),
                     y: .value("Dividendo", data.count))

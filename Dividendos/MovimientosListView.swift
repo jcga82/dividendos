@@ -112,7 +112,7 @@ struct MovimientosListView: View {
                 }
             }
             .sheet(isPresented: $showingEditSheet) {
-                AddEditMovimientoView(movimiento: Movimiento(id: 1, tipo: "BUY", acciones: 0, total_acciones: 0, precio: "0", moneda: "USD", cartera: movimientosFiltratos.first!.cartera, comision: "0", cambio_moneda: "0", fecha: ""))
+                AddEditMovimientoView(movimiento: Movimiento(id: 1, tipo: "BUY", acciones: 0, total_acciones: 0, precio: "0", moneda: "USD", cartera: UserDefaults.standard.integer(forKey: "cartera"), comision: "0", cambio_moneda: "0", fecha: ""))
             }
             .environment(\.editMode, $editMode)
         }

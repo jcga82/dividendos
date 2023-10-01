@@ -78,7 +78,7 @@ struct AddEditMovimientoView: View {
             "acciones": movimiento.acciones,
             "precio": movimiento.precio,
             "moneda": "USD",
-            "cartera": movimiento.cartera.id,
+            "cartera": movimiento.cartera,
             "empresa": movimiento.empresa?.id ?? 0,
             "comision": "0",
             "cambio_moneda": "1",//movimiento.cambio_moneda,
@@ -193,7 +193,7 @@ struct AddEditMovimientoView: View {
                         Button(action: {
                             print("Guardando...", movimiento)
                             if idSelectedEmpresa>0 {
-                                saveMovimiento(movimiento: Movimiento(id: 1, tipo: "BUY", acciones: Double(acciones), total_acciones: Double(acciones), precio: String(precio), moneda: "USD", cartera: carteraObjeto, comision: "0", cambio_moneda: movimiento.cambio_moneda, fecha: convertDateToString(date: fecha)!))
+                                saveMovimiento(movimiento: Movimiento(id: 1, tipo: "BUY", acciones: Double(acciones), total_acciones: Double(acciones), precio: String(precio), moneda: "USD", cartera: UserDefaults.standard.integer(forKey: "cartera"), comision: "0", cambio_moneda: movimiento.cambio_moneda, fecha: convertDateToString(date: fecha)!))
                             } else {
                                 showingAlert = true
                             }
