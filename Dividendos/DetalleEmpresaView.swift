@@ -20,8 +20,10 @@ struct DetalleEmpresaView: View {
     @State private var results = [Result]()
     @State var movimientos = [Movimiento]()
     @State var dividendos = [Dividendo]()
+    @State var historico = [HistoricoEmpresa]()
     var empresa: Empresa
     @State private var showingSheet = false
+    @State private var showingFundamentales = false
     @Environment(\.presentationMode) var presentationMode
     @State private var isImagePresented = false
 
@@ -82,6 +84,23 @@ struct DetalleEmpresaView: View {
             }
         } catch {
             print("ERROR: No hay dividendos")
+        }
+    }
+    
+    func loadFundamentales(symbol: String) async {
+        let url = URL(string: "https://hamperblock.com/django/historico/?symbol=" + symbol )!
+        var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Token \( UserDefaults.standard.value(forKey: "token") ?? "")", forHTTPHeaderField: "Authorization")
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let decodedResponse = try? JSONDecoder().decode(ResponseHistorico.self, from: data) {
+                historico = decodedResponse.results
+                print("hay \(historico.count) historico para esta empresa")
+            }
+        } catch {
+            print("ERROR: No hay historico")
         }
     }
     
@@ -155,6 +174,16 @@ struct DetalleEmpresaView: View {
                             .font(.headline)
                             .bold()
                 }
+                
+                Button("Histórico Dividendos") {
+                    showingSheet.toggle()
+                }
+                .sheet(isPresented: $showingSheet) {
+                    HistoricoDividendosView(dividendos: $dividendos, logo: empresa.logo)
+                }.task {
+                    await loadHistoricoDividendos(symbol: empresa.symbol)
+                }
+                
                 HStack{
                     Text("Filtros")
                         .font(.subheadline)
@@ -174,13 +203,13 @@ struct DetalleEmpresaView: View {
 //            }.task {
 //                await loadDataMovimientos(symbol: empresa.symbol, id: UserDefaults.standard.integer(forKey: "cartera"))
 //            }
-            Button("Histórico Dividendos") {
-                showingSheet.toggle()
+            Button("Ver Fundamentales") {
+                showingFundamentales.toggle()
             }
-            .sheet(isPresented: $showingSheet) {
-                HistoricoDividendosView(dividendos: $dividendos)
+            .sheet(isPresented: $showingFundamentales) {
+                HistoricoEmpresaView(historico: $historico, logo: empresa.logo)
             }.task {
-                await loadHistoricoDividendos(symbol: empresa.symbol)
+                await loadFundamentales(symbol: empresa.symbol)
             }
                 
             NavigationView {

@@ -63,6 +63,52 @@ struct ResponseRent: Codable {
     var results: [Renta]
 }
 
+struct ResponseHistorico: Codable {
+    var results: [HistoricoEmpresa]
+}
+
+struct HistoricoEmpresa: Codable, Identifiable {
+    var id: Int
+    var empresa: Int
+    var fiscalDateEnding: String
+    var reportedEPS: Double
+    var totalRevenue: Double
+    var grossProfit: Double
+    var netIncome: Double
+    var ebitda: Double
+    var costOfRevenue: Double
+    var interests: Double
+    var commonStockSharesOutstanding: Double
+    var totalCurrentAssets: Double
+    var totalNonCurrentAssets: Double
+    var totalCurrentLiabilities: Double
+    var totalNonCurrentLiabilities: Double
+    var shortTermDebt: Double
+    var longTermDebt: Double
+    var dividendPayout: Double
+    var paymentsForRepurchaseOfCommonStock: Double
+    var capitalExpenditures: Double
+    
+    
+//                "dividendPayout": 7252000000.0,
+
+//                "dandp": 165000000,
+//                "tax": 2621000000,
+    
+//                "totalCurrentAssets": 22545000000,
+//                "totalNonCurrentAssets": 73209000000,
+//                "totalCurrentLiabilities": 19950000000,
+//                "totalNonCurrentLiabilities": 50719000000,
+//                "shortTermDebt": 3307000000,
+//                "longTermDebt": 39454000000,
+    
+//                "operatingCashflow": 12625000000,
+//                "cashflowFromInvestment": -2765000000,
+//                "cashflowFromFinancing": -6786000000,
+//                "capitalExpenditures": 1367000000,
+//                "paymentsForRepurchaseOfCommonStock": 111000000,
+}
+
 struct Result: Codable {
     var id: Int
     var captura: String

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D46DF8E2AD9493300C2A0F5 /* HistoricoEmpresaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D46DF8D2AD9493300C2A0F5 /* HistoricoEmpresaView.swift */; };
 		7DA58E5A2A9B4BF4009BD943 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA58E592A9B4BF4009BD943 /* ProfileView.swift */; };
 		7DA58E5C2A9BA1D1009BD943 /* ProfitViviendasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA58E5B2A9BA1D1009BD943 /* ProfitViviendasView.swift */; };
 		7DA58E5E2A9BB52E009BD943 /* ContratosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA58E5D2A9BB52E009BD943 /* ContratosView.swift */; };
@@ -45,6 +46,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7D46DF8D2AD9493300C2A0F5 /* HistoricoEmpresaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricoEmpresaView.swift; sourceTree = "<group>"; };
 		7DA58E592A9B4BF4009BD943 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		7DA58E5B2A9BA1D1009BD943 /* ProfitViviendasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfitViviendasView.swift; sourceTree = "<group>"; };
 		7DA58E5D2A9BB52E009BD943 /* ContratosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContratosView.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				7DA58E612AA2755D009BD943 /* EmpresasListView.swift */,
 				7DE35DD12A83E5240044F57D /* DetalleEmpresaView.swift */,
 				B81ECC822ABDAAF3009A01CC /* HistoricoDividendosView.swift */,
+				7D46DF8D2AD9493300C2A0F5 /* HistoricoEmpresaView.swift */,
 				7DA58E652AA38C64009BD943 /* MovimientosListView.swift */,
 				7DA58E632AA36DD5009BD943 /* AddEditMovimientoView.swift */,
 				B83BF8C22A9CB88D00BBED45 /* DashboardView.swift */,
@@ -264,6 +267,7 @@
 				B81ECC832ABDAAF3009A01CC /* HistoricoDividendosView.swift in Sources */,
 				7DE35DDF2A8B653E0044F57D /* PieChartView.swift in Sources */,
 				7DE35DD22A83E5240044F57D /* DetalleEmpresaView.swift in Sources */,
+				7D46DF8E2AD9493300C2A0F5 /* HistoricoEmpresaView.swift in Sources */,
 				B83BF8C32A9CB88D00BBED45 /* DashboardView.swift in Sources */,
 				7DA58E5C2A9BA1D1009BD943 /* ProfitViviendasView.swift in Sources */,
 				7DE35DDB2A868C5E0044F57D /* CarteraView.swift in Sources */,
