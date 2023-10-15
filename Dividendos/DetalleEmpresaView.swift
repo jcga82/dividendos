@@ -24,6 +24,7 @@ struct DetalleEmpresaView: View {
     var empresa: Empresa
     @State private var showingSheet = false
     @State private var showingFundamentales = false
+    @State private var showingRatios = false
     @Environment(\.presentationMode) var presentationMode
     @State private var isImagePresented = false
 
@@ -57,7 +58,7 @@ struct DetalleEmpresaView: View {
             if let decodedResponse = try? JSONDecoder().decode(ResponseMov.self, from: data) {
                 let all_movimientos = decodedResponse.results
                 movimientos = all_movimientos.filter { item in
-                    if (item.cartera == id) {
+                    if (item.cartera.id == id) {
                         return true
                     } else {
                         return false
@@ -179,7 +180,7 @@ struct DetalleEmpresaView: View {
                     showingSheet.toggle()
                 }
                 .sheet(isPresented: $showingSheet) {
-                    HistoricoDividendosView(dividendos: $dividendos, logo: empresa.logo)
+                    HistoricoDividendosView(dividendos: $dividendos, logo: empresa.logo, cagr5: empresa.cagr5)
                 }.task {
                     await loadHistoricoDividendos(symbol: empresa.symbol)
                 }
@@ -203,11 +204,20 @@ struct DetalleEmpresaView: View {
 //            }.task {
 //                await loadDataMovimientos(symbol: empresa.symbol, id: UserDefaults.standard.integer(forKey: "cartera"))
 //            }
-            Button("Ver Fundamentales") {
+            Button("Ver Ratios Fundamentales") {
+                showingRatios.toggle()
+            }
+            .sheet(isPresented: $showingRatios) {
+                FundamentalesEmpresaView(symbol: empresa.symbol)
+            }
+            
+            Button("Ver Fundamentales \(historico.count) años") {
                 showingFundamentales.toggle()
             }
             .sheet(isPresented: $showingFundamentales) {
-                HistoricoEmpresaView(historico: $historico, logo: empresa.logo)
+                if historico.count > 0 {
+                    HistoricoEmpresaView(historico: $historico, logo: empresa.logo)
+                }
             }.task {
                 await loadFundamentales(symbol: empresa.symbol)
             }

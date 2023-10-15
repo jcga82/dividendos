@@ -45,9 +45,10 @@ struct CarteraView: View {
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             if let decodedResponse = try? JSONDecoder().decode(ResponseMov.self, from: data) {
+                print(decodedResponse)
                 let all_movimientos = decodedResponse.results
                 movimientos = all_movimientos.filter { item in
-                    if (item.cartera == id) {
+                    if (item.cartera.id == id) {
                         return true
                     } else {
                         return false
@@ -144,6 +145,9 @@ struct CarteraView: View {
                         }
                         NavigationLink(destination: ProfitView()){
                             Label("Mi Balance", systemImage: "chart.xyaxis.line")
+                        }
+                        NavigationLink(destination: FearIndexView()){
+                            Label("Índice Miedo & Codicia ", systemImage: "chart.xyaxis.line")
                         }
                     })
                     

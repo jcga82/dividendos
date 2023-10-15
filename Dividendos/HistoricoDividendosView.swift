@@ -13,6 +13,7 @@ struct HistoricoDividendosView: View {
     
     @Binding var dividendos: [Dividendo]
     @State var logo: String
+    @State var cagr5: Double
     @Environment (\.presentationMode) var presentationMode
     
 //    func getCagr() -> [DesgloseBar] {
@@ -49,7 +50,7 @@ struct HistoricoDividendosView: View {
         .frame(width: 355, height: 200)
             .chartBackground { proxy in
                 LogoView(logo: logo).padding(10).offset(x: -130, y: -70)
-                Text("CAGR 5 años: 7,40%")
+                Text("CAGR 5 años: \(String(format: "%.2f",cagr5))%")
                     .font(.footnote)
                     .bold()
                     .offset(x: -95, y: -35)

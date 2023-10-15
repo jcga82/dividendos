@@ -10,12 +10,11 @@ import SwiftUI
 struct MovimientosListView: View {
     
     @Binding public var movs: [Movimiento]
-    var isVolver: Bool = false
-//    @State var selected = 0
-//    @Environment(\.presentationMode) var presentationMode
+    var isVolver: Bool = true
     @State private var tipoSecleccionado = 0
     @State private var editMode: EditMode = EditMode.inactive
-    @State var showingEditSheet = false
+    @State var showingAddSheet = false
+    @State var loading: Bool = true
     
     var movimientosFiltratos: [Movimiento] {
         if tipoSecleccionado == 0 {
@@ -64,66 +63,69 @@ struct MovimientosListView: View {
         }.resume()
     }
     
+    struct LoadingView: View {
+        var body: some View {
+            ProgressView("Downloading…")
+        }
+    }
+    
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(movimientosFiltratos, id:\.id) { mov in
-                    HStack {
-                        NavigationLink(destination: AddEditMovimientoView(movimiento: mov)) {
-                            HStack {
-                                VStack {
-                                    Image(systemName: mov.tipo=="BUY" ? "checkmark.circle.fill" : "rectangle.fill.badge.checkmark")
-                                        .foregroundColor(mov.tipo=="BUY" ? .green : .red)
-                                        .font(.title)
-
-                                    Text(getDate(fecha:mov.fecha) ?? Date(), format: Date.FormatStyle().year().month().day())
-                                        .font(.footnote)
-                                }
-                                VStack {
-                                    HStack {
-                                        Text("\(String(format: "%.0f", mov.acciones)) acc")
-                                        Text(isVolver ? "" : "@\(mov.empresa?.symbol ?? "")")
+        
+        if movs.isEmpty {
+            LoadingView()
+        } else {
+            
+            NavigationView {
+                List {
+                    ForEach(movimientosFiltratos, id:\.id) { mov in
+                        HStack {
+                            NavigationLink(destination: AddEditMovimientoView(movimiento: mov)) {
+                                HStack {
+                                    VStack {
+                                        Image(systemName: mov.tipo=="BUY" ? "checkmark.circle.fill" : "rectangle.fill.badge.checkmark")
+                                            .foregroundColor(mov.tipo=="BUY" ? .green : .red)
+                                            .font(.title)
+                                        
+                                        Text(getDate(fecha:mov.fecha) ?? Date(), format: Date.FormatStyle().year().month().day())
+                                            .font(.footnote)
                                     }
-                                    Text("\(String(format: "%.2f", Double(mov.precio)!))€").font(.footnote)
-                                }
-                                Spacer()
-                                VStack {
-                                    Text("\(String(format: "%.2f", getCoste(acciones: mov.acciones, precio: mov.precio)!))€").font(.footnote).bold()
-                                        .foregroundColor(mov.tipo=="BUY" ? .green : .red)
-                                    Text(String(format: "%.0f", mov.total_acciones)).bold()
+                                    VStack {
+                                        HStack {
+                                            Text("\(String(format: "%.0f", mov.acciones)) acc")
+                                            Text("@\(mov.empresa.symbol)")
+                                        }
+                                        Text("\(String(format: "%.2f", Double(mov.precio)!))€").font(.footnote)
+                                    }
+                                    Spacer()
+                                    VStack {
+                                        Text("\(String(format: "%.2f", getCoste(acciones: mov.acciones, precio: mov.precio)!))€").font(.footnote).bold()
+                                            .foregroundColor(mov.tipo=="BUY" ? .green : .red)
+                                        Text(String(format: "%.0f", mov.total_acciones)).bold()
+                                    }
                                 }
                             }
                         }
                     }
+                    .onDelete(perform: delete)
                 }
-                .onDelete(perform: delete)
-            }
-            .navigationTitle("Movimientos")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                .navigationTitle("Movimientos")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
                         Image(systemName: "plus")
-                        .foregroundStyle(Color.green)
+                            .foregroundStyle(Color.green)
                             .onTapGesture {
-                                showingEditSheet = true
+                                showingAddSheet.toggle()
                             }
+                    }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        EditButton()
+                    }
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
+                .sheet(isPresented: $showingAddSheet) {
+                    AddMovimientoView()
                 }
+                .environment(\.editMode, $editMode)
             }
-            .sheet(isPresented: $showingEditSheet) {
-                AddEditMovimientoView(movimiento: Movimiento(id: 1, tipo: "BUY", acciones: 0, total_acciones: 0, precio: "0", moneda: "USD", cartera: UserDefaults.standard.integer(forKey: "cartera"), comision: "0", cambio_moneda: "0", fecha: ""))
-            }
-            .environment(\.editMode, $editMode)
         }
     }
 }
-
-
-//Image(systemName: "plus")
-//    .resizable()
-//    .padding(6)
-//    .frame(width: 24, height: 24)
-//    .background(Color.green)
-//    .clipShape(Circle())
-//    .foregroundColor(.white)

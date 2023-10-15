@@ -1,61 +1,61 @@
 //
-//  AddEditMovimientoView.swift
+//  AddMovimientoView.swift
 //  Dividendos
 //
-//  Created by juancarlos on 2/9/23.
+//  Created by juancarlos on 14/10/23.
 //
 
 import SwiftUI
 
-struct AddEditMovimientoView: View {
-    
+struct AddMovimientoView: View {
     @Environment (\.presentationMode) var presentationMode
-    @State var movimiento: Movimiento
-
     @State var empresas: [Empresa] = [Empresa]()
     @State var selectedEmpresa:Empresa?
-    
+    @State private var fecha = Date.now
+    @State var acciones: Int = 1
+    @State var tipo = "BUY"
+    @State var precio = ""
     @State var idSelectedEmpresa = 0
-    //@State var carteraObjeto: Cartera = Cartera(id: 0, nombre: "", capital_inicial: "")
     @State private var showingAlert = false
+    @State private var showingAlertOK = false
     
-    func updateMovimiento(movimiento: Movimiento) {
-        print(movimiento)
+    func saveMovimiento() {
+        let id_cartera = UserDefaults.standard.integer(forKey: "cartera")
         let body = [
-            "id": movimiento.id,
-            "tipo": movimiento.tipo,
-            "acciones": movimiento.acciones,
-            "precio": movimiento.precio,
+            "tipo": tipo,
+            "acciones": acciones,
+            "total_acciones": acciones,
+            "precio": String(precio),
             "moneda": "USD",
-            "cartera": movimiento.cartera.id,
-            "empresa": movimiento.empresa.id,
+            "cartera": id_cartera,
+            "empresa": idSelectedEmpresa,
             "comision": "0",
-            "cambio_moneda": "1",//movimiento.cambio_moneda,
-            "fecha": movimiento.fecha, //convertDateToString(date: movimiento.fecha)!
+            "cambio_moneda": "1",
+            "fecha": convertDateToString(date: fecha)!
         ] as [String : Any]
         
         let token = UserDefaults.standard.value(forKey: "token")
-        let url = URL(string: "https://hamperblock.com/django/movimiento/update")!
+        let url = URL(string: "https://hamperblock.com/django/movimiento/crear")!
         let finalBody = try! JSONSerialization.data(withJSONObject: body)
         var request = URLRequest(url: url)
-            request.httpMethod = "PUT"
+            request.httpMethod = "POST"
             request.httpBody = finalBody
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.setValue("Token \( token ?? "")", forHTTPHeaderField: "Authorization")
         
         URLSession.shared.dataTask(with: request) { (data, response, error) in
-            print("entro edit", response, error)
+            print("entro 2", body, data, response, error)
             guard let data = data, error == nil else {
                 print("hay problemas de conexión con la BBDD", error as Any)
                 return
             }
             let result = try? JSONDecoder().decode(Movimiento.self, from: data)
                     Task {
-                        await getActualizaCartera(idCartera: String(movimiento.cartera.id))
+                        await getActualizaCartera(idCartera: String(id_cartera))
                     }
                     if let result = result {
                         DispatchQueue.main.async {
-                            print("TODO OK")
+                            print(result)
                         }
                     } else {
                         DispatchQueue.main.async {
@@ -64,6 +64,8 @@ struct AddEditMovimientoView: View {
             }
         }.resume()
     }
+    
+   
     
     func getActualizaCartera(idCartera: String) async {
         let url = URL(string: "https://hamperblock.com/django/movimientos/"+idCartera+"/get_movimientos")!
@@ -95,15 +97,13 @@ struct AddEditMovimientoView: View {
         }
     }
     
-    
-    
     var body: some View {
         NavigationView {
             Form {
-                Section {
-                    Picker("Empresa:", selection: $movimiento.empresa) {
+                Section{
+                    Picker("Empresa:", selection: $selectedEmpresa) {
                         ForEach(empresas, id: \.symbol) { empresa in
-                            Text(empresa.symbol).tag(empresa as Empresa)
+                            Text(empresa.symbol).tag(empresa as Empresa?)
                         }
                     }.pickerStyle(.navigationLink)
                     .onChange(of: selectedEmpresa) {
@@ -111,61 +111,55 @@ struct AddEditMovimientoView: View {
                             print(empresas.count, selectedEmpresa!)
                             idSelectedEmpresa = selectedEmpresa?.id ?? 0
                     }
-                    DatePicker(selection: getDateBinding(fecha: movimiento.fecha)!, in: ...Date.now, displayedComponents: .date) {
+                    DatePicker(selection: getDateBinding(fecha: convertDateToString(date: fecha)!)!, in: ...Date.now, displayedComponents: .date) {
                         Text("Fecha")
                     }
-                    HStack {
-                        Picker("Tipo", selection: $movimiento.tipo) {
-                            Text("Compra").tag("BUY")
-                            Text("Venta").tag("SELL")
-                        }
-                        .pickerStyle(MenuPickerStyle())
-                        Spacer()
-                        Text(movimiento.tipo)
+                    Picker("Tipo", selection: $tipo) {
+                        Text("Compra").tag("BUY")
+                        Text("Venta").tag("SELL")
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                    
+                    Stepper(value: $acciones, in: 1...1000) {
+                        Text("Cantidad: \(getStringFromBindingInt(dato:$acciones) ?? "")")
                     }
                     
-                    HStack {
-                        Stepper("Cantidad", value: $movimiento.acciones).labelsHidden()
-                        Spacer()
-                        TextField("Cantidad", value: $movimiento.acciones, formatter: NumberFormatter())
-                            .multilineTextAlignment(.center)
-                            .keyboardType(.numberPad)
-                            .frame(minWidth: 35, maxWidth: 80)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                                }
+                    TextField("Precio", text: $precio)
+                        .keyboardType(.numberPad)
                     
-                    ZStack(alignment: .trailing) {
-                        Text("Precio $")
-                        TextField("", text: $movimiento.precio)
-                            .keyboardType(.numberPad)
-                    }.alignmentGuide(.listRowSeparatorLeading) { viewDimensions in
-                        return 0
-                    }
-
-                    ZStack(alignment: .trailing) {
-                        Text("Cambio moneda").foregroundColor(.secondary)
-                        TextField("password", text:$movimiento.cambio_moneda)
-                    }.alignmentGuide(.listRowSeparatorLeading) { viewDimensions in
-                        return 0
-                    }
-                    
+//                    ZStack(alignment: .trailing) {
+//                        Text("Precio $")
+//                        TextField("", text: $precio)
+//                            .keyboardType(.numberPad)
+//                    }.alignmentGuide(.listRowSeparatorLeading) { viewDimensions in
+//                        return 0
+//                    }
+//                    ZStack(alignment: .trailing) {
+//                        Text("Precio")
+//                        TextField("",value: $precio, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+//                    }.alignmentGuide(.listRowSeparatorLeading) { viewDimensions in
+//                        return 0
+//                    }
                     
                     Button(action: {
-                        print("Guardando...", movimiento)
-                        updateMovimiento(movimiento: movimiento)
-
+                        if idSelectedEmpresa>0 && precio != "" {
+                            saveMovimiento()
+                            showingAlertOK = true
+                        } else {
+                            showingAlert = true
+                        }
                     }, label: {
                         HStack {
                             Spacer()
-                            Text("Actualizar")
+                            Text("Guardar")
                             Spacer()
                         }
                     })
-                        .buttonStyle(.bordered)
-                        .foregroundColor(.white)
-                        .background(.green)
-                        .font(.footnote)
-                        .cornerRadius(22)
+                    .buttonStyle(.bordered)
+                    .foregroundColor(.white)
+                    .background(.green)
+                    .font(.footnote)
+                    .cornerRadius(22)
                     
                     Button("Volver", action: {
                         self.presentationMode.wrappedValue.dismiss()
@@ -177,13 +171,21 @@ struct AddEditMovimientoView: View {
                         .font(.footnote)
                         .cornerRadius(22)
                     
-                    
                 }
-                    
-                
+                .alert(isPresented: $showingAlert) {
+                    Alert(title: Text("Movimiento"),
+                          message: Text("Debes seleccionar una empresa y un precio"),
+                          dismissButton: .default(Text("Vamos a ello"))
+                        )
+                }
+//                .alert(isPresented: $showingAlertOK) {
+//                    Alert(title: Text("Movimiento"),
+//                          message: Text("El movimiento se ha añadido correctamente"),
+//                          dismissButton: .default(Text("OK"))
+//                        )
+//                }
             }
-            .padding()
-            .navigationTitle("Editar Movimiento")
+            .navigationTitle("Añadir Movimiento")
             .navigationBarTitleDisplayMode(.inline)
         }.task {
             await loadDataEmpresas()

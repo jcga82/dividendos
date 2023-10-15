@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		7D46DF8E2AD9493300C2A0F5 /* HistoricoEmpresaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D46DF8D2AD9493300C2A0F5 /* HistoricoEmpresaView.swift */; };
+		7D46DF902ADACCA000C2A0F5 /* AddMovimientoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D46DF8F2ADACCA000C2A0F5 /* AddMovimientoView.swift */; };
+		7D46DF922ADC24AB00C2A0F5 /* FearIndexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D46DF912ADC24AB00C2A0F5 /* FearIndexView.swift */; };
+		7D46DF942ADC357F00C2A0F5 /* FundamentalesEmpresaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D46DF932ADC357F00C2A0F5 /* FundamentalesEmpresaView.swift */; };
 		7DA58E5A2A9B4BF4009BD943 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA58E592A9B4BF4009BD943 /* ProfileView.swift */; };
 		7DA58E5C2A9BA1D1009BD943 /* ProfitViviendasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA58E5B2A9BA1D1009BD943 /* ProfitViviendasView.swift */; };
 		7DA58E5E2A9BB52E009BD943 /* ContratosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA58E5D2A9BB52E009BD943 /* ContratosView.swift */; };
@@ -47,6 +50,9 @@
 
 /* Begin PBXFileReference section */
 		7D46DF8D2AD9493300C2A0F5 /* HistoricoEmpresaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricoEmpresaView.swift; sourceTree = "<group>"; };
+		7D46DF8F2ADACCA000C2A0F5 /* AddMovimientoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMovimientoView.swift; sourceTree = "<group>"; };
+		7D46DF912ADC24AB00C2A0F5 /* FearIndexView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FearIndexView.swift; sourceTree = "<group>"; };
+		7D46DF932ADC357F00C2A0F5 /* FundamentalesEmpresaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FundamentalesEmpresaView.swift; sourceTree = "<group>"; };
 		7DA58E592A9B4BF4009BD943 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		7DA58E5B2A9BA1D1009BD943 /* ProfitViviendasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfitViviendasView.swift; sourceTree = "<group>"; };
 		7DA58E5D2A9BB52E009BD943 /* ContratosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContratosView.swift; sourceTree = "<group>"; };
@@ -121,10 +127,12 @@
 				B80C480B2A402D180047AAC0 /* ContentView.swift */,
 				7DA58E612AA2755D009BD943 /* EmpresasListView.swift */,
 				7DE35DD12A83E5240044F57D /* DetalleEmpresaView.swift */,
+				7D46DF932ADC357F00C2A0F5 /* FundamentalesEmpresaView.swift */,
 				B81ECC822ABDAAF3009A01CC /* HistoricoDividendosView.swift */,
 				7D46DF8D2AD9493300C2A0F5 /* HistoricoEmpresaView.swift */,
 				7DA58E652AA38C64009BD943 /* MovimientosListView.swift */,
 				7DA58E632AA36DD5009BD943 /* AddEditMovimientoView.swift */,
+				7D46DF8F2ADACCA000C2A0F5 /* AddMovimientoView.swift */,
 				B83BF8C22A9CB88D00BBED45 /* DashboardView.swift */,
 				7DA58E592A9B4BF4009BD943 /* ProfileView.swift */,
 				7DE35DD52A83E53A0044F57D /* model.swift */,
@@ -140,6 +148,7 @@
 				7DE35DD32A83E52C0044F57D /* HeaderView.swift */,
 				7DA58E5F2AA2750C009BD943 /* ComponentsView.swift */,
 				7DE35DD72A83E5410044F57D /* services.swift */,
+				7D46DF912ADC24AB00C2A0F5 /* FearIndexView.swift */,
 				7DE35DDC2A868D970044F57D /* auxiliares.swift */,
 				B80C480D2A402D1A0047AAC0 /* Assets.xcassets */,
 				B80C480F2A402D1A0047AAC0 /* Preview Content */,
@@ -258,11 +267,13 @@
 				7DA58E5E2A9BB52E009BD943 /* ContratosView.swift in Sources */,
 				7DA58E642AA36DD5009BD943 /* AddEditMovimientoView.swift in Sources */,
 				7DA58E5A2A9B4BF4009BD943 /* ProfileView.swift in Sources */,
+				7D46DF922ADC24AB00C2A0F5 /* FearIndexView.swift in Sources */,
 				B80C480A2A402D180047AAC0 /* DividendosApp.swift in Sources */,
 				7DE35DCE2A83E4E60044F57D /* charts.swift in Sources */,
 				7DA58E662AA38C64009BD943 /* MovimientosListView.swift in Sources */,
 				7DA58E682AAF8C5F009BD943 /* ViviendasListView.swift in Sources */,
 				7DA58E602AA2750C009BD943 /* ComponentsView.swift in Sources */,
+				7D46DF942ADC357F00C2A0F5 /* FundamentalesEmpresaView.swift in Sources */,
 				7DE35DD82A83E5410044F57D /* services.swift in Sources */,
 				B81ECC832ABDAAF3009A01CC /* HistoricoDividendosView.swift in Sources */,
 				7DE35DDF2A8B653E0044F57D /* PieChartView.swift in Sources */,
@@ -271,6 +282,7 @@
 				B83BF8C32A9CB88D00BBED45 /* DashboardView.swift in Sources */,
 				7DA58E5C2A9BA1D1009BD943 /* ProfitViviendasView.swift in Sources */,
 				7DE35DDB2A868C5E0044F57D /* CarteraView.swift in Sources */,
+				7D46DF902ADACCA000C2A0F5 /* AddMovimientoView.swift in Sources */,
 				7DE35DC82A83E4E60044F57D /* HeaderView.swift in Sources */,
 				7DA58E622AA2755D009BD943 /* EmpresasListView.swift in Sources */,
 			);

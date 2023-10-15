@@ -26,6 +26,10 @@ func getStringFromBinding(dato: Binding<Double>) -> String? {
     return String("\(dato.wrappedValue)")
 }
 
+func getStringFromBindingInt(dato: Binding<Int>) -> String? {
+    return String("\(dato.wrappedValue)")
+}
+
 func getDateShort(fecha: String) -> Date? {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -177,7 +181,7 @@ func getDesgloseRentas(rentas: [Renta]) -> [Desglose] {
 }
 
 func getEmpresa(symbol: String) async -> Empresa {
-    var empresa = Empresa(id: 1, nombre: "", logo: "", cabecera: "", isin: "", estrategia: "", pais: "", sector: "", symbol: "", description: "", dividendo_desde: "", tipo: "", pub_date: "")
+    var empresa = Empresa(id: 1, nombre: "", logo: "", cabecera: "", isin: "", estrategia: "", pais: "", sector: "", symbol: "", description: "", dividendo_desde: "", tipo: "", pub_date: "", cagr5: 0.0)
     
     guard let url = URL(string: "https://hamperblock.com/django/empresas/?symbol=" + symbol ) else {
         print("Invalid URL")

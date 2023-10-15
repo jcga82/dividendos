@@ -88,6 +88,7 @@ struct HistoricoEmpresa: Codable, Identifiable {
     var dividendPayout: Double
     var paymentsForRepurchaseOfCommonStock: Double
     var capitalExpenditures: Double
+    var operatingCashflow: Double
     
     
 //                "dividendPayout": 7252000000.0,
@@ -157,8 +158,8 @@ struct Movimiento: Codable {
     var total_acciones: Double
     var precio: String
     var moneda: String
-    var empresa: Empresa?
-    var cartera: Int
+    var empresa: Empresa
+    var cartera: Cartera
     var comision: String
     var cambio_moneda: String
     var fecha: String
@@ -179,10 +180,28 @@ struct Empresa: Codable, Hashable {
     let dividendo_desde: String
     let tipo: String
     let pub_date: String
+    let cagr5: Double
     
     func getString() {
         print( "Name: \(nombre), Id: \(id), logo: \(logo), est: \(estrategia), pub_date: \(pub_date) ")
     }
+}
+
+struct FundamentalesEmpresa: Codable {
+    var id: Int
+    var fiscalDateEnding: String
+    var num_acciones: Double
+    var markercap: Double
+    var ebitda: Double
+    var per: Double
+    var beta: Double
+    var dpa: Double
+    var bpa: Double
+    var dya: Double
+    var WeekHighYear: Double
+    var WeekLowYear: Double
+    var DayMovingAverage50: Double
+    var DayMovingAverage200: Double
 }
 
 struct Profit: Codable, Identifiable {
